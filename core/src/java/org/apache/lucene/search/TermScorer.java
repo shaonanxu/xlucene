@@ -39,11 +39,11 @@ final class TermScorer extends Scorer {
    *          The </code>Similarity.SimScorer</code> implementation 
    *          to be used for score computations.
    */
-  TermScorer(Weight weight, DocsEnum td, Similarity.SimScorer docScorer) {
-    super(weight);
-    this.docScorer = docScorer;
-    this.docsEnum = td;
-  }
+	TermScorer(Weight weight, DocsEnum td, Similarity.SimScorer docScorer) {
+		super(weight);
+		this.docScorer = docScorer;
+		this.docsEnum = td;
+	}
 
   @Override
   public int docID() {

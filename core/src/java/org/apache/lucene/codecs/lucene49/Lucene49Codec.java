@@ -60,12 +60,12 @@ public class Lucene49Codec extends Codec {
   private final SegmentInfoFormat segmentInfosFormat = new Lucene46SegmentInfoFormat();
   private final LiveDocsFormat liveDocsFormat = new Lucene40LiveDocsFormat();
   
-  private final PostingsFormat postingsFormat = new PerFieldPostingsFormat() {
-    @Override
-    public PostingsFormat getPostingsFormatForField(String field) {
-      return Lucene49Codec.this.getPostingsFormatForField(field);
-    }
-  };
+	private final PostingsFormat postingsFormat = new PerFieldPostingsFormat() {
+		@Override
+		public PostingsFormat getPostingsFormatForField(String field) {
+			return Lucene49Codec.this.getPostingsFormatForField(field);
+		}
+	};
   
   private final DocValuesFormat docValuesFormat = new PerFieldDocValuesFormat() {
     @Override
@@ -114,9 +114,9 @@ public class Lucene49Codec extends Codec {
    *  
    *  The default implementation always returns "Lucene41"
    */
-  public PostingsFormat getPostingsFormatForField(String field) {
-    return defaultFormat;
-  }
+	public PostingsFormat getPostingsFormatForField(String field) {
+		return defaultFormat;
+	}
   
   /** Returns the docvalues format that should be used for writing 
    *  new segments of <code>field</code>.

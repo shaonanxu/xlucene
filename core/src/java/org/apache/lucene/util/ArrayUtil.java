@@ -29,7 +29,7 @@ import java.util.Comparator;
 public final class ArrayUtil {
 
   /** Maximum length for an array (Integer.MAX_VALUE - RamUsageEstimator.NUM_BYTES_ARRAY_HEADER). */
-  public static final int MAX_ARRAY_LENGTH = Integer.MAX_VALUE - RamUsageEstimator.NUM_BYTES_ARRAY_HEADER;
+	public static final int MAX_ARRAY_LENGTH = Integer.MAX_VALUE - RamUsageEstimator.NUM_BYTES_ARRAY_HEADER;
 
   private ArrayUtil() {} // no instance
 
@@ -146,8 +146,7 @@ public final class ArrayUtil {
    *  2010.
    *
    * @param minTargetSize Minimum required value to be returned.
-   * @param bytesPerElement Bytes used by each element of
-   * the array.  See constants in {@link RamUsageEstimator}.
+   * @param bytesPerElement Bytes used by each element of the array.  See constants in {@link RamUsageEstimator}.
    *
    * @lucene.internal
    */
@@ -170,22 +169,21 @@ public final class ArrayUtil {
     // asymptotic exponential growth by 1/8th, favors
     // spending a bit more CPU to not tie up too much wasted
     // RAM:
-    int extra = minTargetSize >> 3;
+		int extra = minTargetSize >> 3;
 
-    if (extra < 3) {
+		if (extra < 3) {
       // for very small arrays, where constant overhead of
-      // realloc is presumably relatively high, we grow
-      // faster
-      extra = 3;
-    }
+      // realloc is presumably relatively high, we grow faster
+			extra = 3;
+		}
 
     int newSize = minTargetSize + extra;
 
     // add 7 to allow for worst case byte alignment addition below:
-    if (newSize+7 < 0 || newSize+7 > MAX_ARRAY_LENGTH) {
+		if (newSize + 7 < 0 || newSize + 7 > MAX_ARRAY_LENGTH) {
       // int overflowed, or we exceeded the maximum array length
-      return MAX_ARRAY_LENGTH;
-    }
+			return MAX_ARRAY_LENGTH;
+		}
 
     if (Constants.JRE_IS_64BIT) {
       // round up to 8 byte alignment in 64bit env
@@ -196,9 +194,9 @@ public final class ArrayUtil {
       case 2:
         // round up to multiple of 4
         return (newSize + 3) & 0x7ffffffc;
-      case 1:
-        // round up to multiple of 8
-        return (newSize + 7) & 0x7ffffff8;
+			case 1:
+				// round up to multiple of 8
+				return (newSize + 7) & 0x7ffffff8;
       case 8:
         // no rounding
       default:
@@ -338,15 +336,15 @@ public final class ArrayUtil {
       return array;
   }
 
-  public static byte[] grow(byte[] array, int minSize) {
+	public static byte[] grow(byte[] array, int minSize) {
     assert minSize >= 0: "size must be positive (got " + minSize + "): likely integer overflow?";
-    if (array.length < minSize) {
-      byte[] newArray = new byte[oversize(minSize, 1)];
-      System.arraycopy(array, 0, newArray, 0, array.length);
-      return newArray;
-    } else
-      return array;
-  }
+		if (array.length < minSize) {
+			byte[] newArray = new byte[oversize(minSize, 1)];
+			System.arraycopy(array, 0, newArray, 0, array.length);
+			return newArray;
+		} else
+			return array;
+	}
 
   public static byte[] grow(byte[] array) {
     return grow(array, 1 + array.length);

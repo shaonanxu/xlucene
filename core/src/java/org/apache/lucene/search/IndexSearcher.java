@@ -264,10 +264,9 @@ public class IndexSearcher {
    * @throws BooleanQuery.TooManyClauses If a query would exceed 
    *         {@link BooleanQuery#getMaxClauseCount()} clauses.
    */
-  public TopDocs search(Query query, int n)
-    throws IOException {
-    return search(query, null, n);
-  }
+	public TopDocs search(Query query, int n) throws IOException {
+		return search(query, null, n);
+	}
 
 
   /** Finds the top <code>n</code>
@@ -302,10 +301,9 @@ public class IndexSearcher {
    * @throws BooleanQuery.TooManyClauses If a query would exceed 
    *         {@link BooleanQuery#getMaxClauseCount()} clauses.
    */
-  public void search(Query query, Collector results)
-    throws IOException {
-    search(leafContexts, createNormalizedWeight(query), results);
-  }
+	public void search(Query query, Collector results) throws IOException {
+		search(leafContexts, createNormalizedWeight(query), results);
+	}
   
   /** Search implementation with arbitrary sorting.  Finds
    * the top <code>n</code> hits for <code>query</code>, applying
@@ -429,8 +427,8 @@ public class IndexSearcher {
    * @throws BooleanQuery.TooManyClauses If a query would exceed 
    *         {@link BooleanQuery#getMaxClauseCount()} clauses.
    */
-  protected TopDocs search(Weight weight, ScoreDoc after, int nDocs) throws IOException {
-    int limit = reader.maxDoc();
+	protected TopDocs search(Weight weight, ScoreDoc after, int nDocs) throws IOException {
+		int limit = reader.maxDoc();
     if (limit == 0) {
       limit = 1;
     }
@@ -440,9 +438,9 @@ public class IndexSearcher {
     }
     nDocs = Math.min(nDocs, limit);
     
-    if (executor == null) {
-      return search(leafContexts, weight, after, nDocs);
-    } else {
+		if (executor == null) {
+			return search(leafContexts, weight, after, nDocs);
+		} else {
       final HitQueue hq = new HitQueue(nDocs, false);
       final Lock lock = new ReentrantLock();
       final ExecutionHelper<TopDocs> runner = new ExecutionHelper<>(executor);
@@ -476,17 +474,17 @@ public class IndexSearcher {
    * @throws BooleanQuery.TooManyClauses If a query would exceed 
    *         {@link BooleanQuery#getMaxClauseCount()} clauses.
    */
-  protected TopDocs search(List<AtomicReaderContext> leaves, Weight weight, ScoreDoc after, int nDocs) throws IOException {
+	protected TopDocs search(List<AtomicReaderContext> leaves, Weight weight, ScoreDoc after, int nDocs) throws IOException {
     // single thread
-    int limit = reader.maxDoc();
-    if (limit == 0) {
-      limit = 1;
-    }
-    nDocs = Math.min(nDocs, limit);
-    TopScoreDocCollector collector = TopScoreDocCollector.create(nDocs, after, !weight.scoresDocsOutOfOrder());
-    search(leaves, weight, collector);
-    return collector.topDocs();
-  }
+		int limit = reader.maxDoc();
+		if (limit == 0) {
+			limit = 1;
+		}
+		nDocs = Math.min(nDocs, limit);
+    	TopScoreDocCollector collector = TopScoreDocCollector.create(nDocs, after, !weight.scoresDocsOutOfOrder());
+		search(leaves, weight, collector);
+		return collector.topDocs();
+	}
 
   /** Expert: Low-level search implementation with arbitrary
    * sorting and control over whether hit scores and max
@@ -613,14 +611,13 @@ public class IndexSearcher {
    * @throws BooleanQuery.TooManyClauses If a query would exceed 
    *         {@link BooleanQuery#getMaxClauseCount()} clauses.
    */
-  public Query rewrite(Query original) throws IOException {
-    Query query = original;
-    for (Query rewrittenQuery = query.rewrite(reader); rewrittenQuery != query;
-         rewrittenQuery = query.rewrite(reader)) {
-      query = rewrittenQuery;
-    }
-    return query;
-  }
+	public Query rewrite(Query original) throws IOException {
+		Query query = original;
+		for (Query rewrittenQuery = query.rewrite(reader); rewrittenQuery != query; rewrittenQuery = query.rewrite(reader)) {
+			query = rewrittenQuery;
+		}
+		return query;
+	}
 
   /** Returns an Explanation that describes how <code>doc</code> scored against
    * <code>query</code>.
@@ -661,17 +658,17 @@ public class IndexSearcher {
    * can then directly be used to get a {@link Scorer}.
    * @lucene.internal
    */
-  public Weight createNormalizedWeight(Query query) throws IOException {
-    query = rewrite(query);
-    Weight weight = query.createWeight(this);
-    float v = weight.getValueForNormalization();
-    float norm = getSimilarity().queryNorm(v);
-    if (Float.isInfinite(norm) || Float.isNaN(norm)) {
-      norm = 1.0f;
-    }
-    weight.normalize(norm, 1.0f);
-    return weight;
-  }
+	public Weight createNormalizedWeight(Query query) throws IOException {
+		query = rewrite(query);
+		Weight weight = query.createWeight(this);
+		float v = weight.getValueForNormalization();
+		float norm = getSimilarity().queryNorm(v);
+		if (Float.isInfinite(norm) || Float.isNaN(norm)) {
+			norm = 1.0f;
+		}
+		weight.normalize(norm, 1.0f);
+		return weight;
+	}
   
   /**
    * Returns this searchers the top-level {@link IndexReaderContext}.

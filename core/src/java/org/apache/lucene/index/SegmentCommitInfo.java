@@ -28,8 +28,7 @@ import java.util.Set;
 
 import org.apache.lucene.store.Directory;
 
-/** Embeds a [read-only] SegmentInfo and adds per-commit
- *  fields.
+/** Embeds a [read-only] SegmentInfo and adds per-commit fields.
  *
  *  @lucene.experimental */
 public class SegmentCommitInfo {

@@ -57,8 +57,8 @@ public final class FieldReader extends Terms implements Accountable {
   final FST<BytesRef> index;
   //private boolean DEBUG;
 
-  FieldReader(BlockTreeTermsReader parent, FieldInfo fieldInfo, long numTerms, BytesRef rootCode, long sumTotalTermFreq, long sumDocFreq, int docCount,
-              long indexStartFP, int longsSize, IndexInput indexIn, BytesRef minTerm, BytesRef maxTerm) throws IOException {
+	FieldReader(BlockTreeTermsReader parent, FieldInfo fieldInfo, long numTerms, BytesRef rootCode, long sumTotalTermFreq,
+			long sumDocFreq, int docCount, long indexStartFP, int longsSize, IndexInput indexIn, BytesRef minTerm, BytesRef maxTerm) throws IOException {
     assert numTerms > 0;
     this.fieldInfo = fieldInfo;
     //DEBUG = BlockTreeTermsReader.DEBUG && fieldInfo.name.equals("id");
@@ -78,11 +78,11 @@ public final class FieldReader extends Terms implements Accountable {
 
     rootBlockFP = (new ByteArrayDataInput(rootCode.bytes, rootCode.offset, rootCode.length)).readVLong() >>> BlockTreeTermsWriter.OUTPUT_FLAGS_NUM_BITS;
 
-    if (indexIn != null) {
-      final IndexInput clone = indexIn.clone();
+		if (indexIn != null) {
+			final IndexInput clone = indexIn.clone();
       //System.out.println("start=" + indexStartFP + " field=" + fieldInfo.name);
-      clone.seek(indexStartFP);
-      index = new FST<>(clone, ByteSequenceOutputs.getSingleton());
+			clone.seek(indexStartFP);
+			index = new FST<>(clone, ByteSequenceOutputs.getSingleton());
         
       /*
         if (false) {
@@ -149,10 +149,10 @@ public final class FieldReader extends Terms implements Accountable {
     return fieldInfo.hasPayloads();
   }
 
-  @Override
-  public TermsEnum iterator(TermsEnum reuse) throws IOException {
-    return new SegmentTermsEnum(this);
-  }
+	@Override
+	public TermsEnum iterator(TermsEnum reuse) throws IOException {
+		return new SegmentTermsEnum(this);
+	}
 
   @Override
   public long size() {

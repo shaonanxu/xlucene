@@ -97,7 +97,7 @@ public abstract class Weight {
    * @return a {@link Scorer} which scores documents in/out-of order.
    * @throws IOException if there is a low-level I/O error
    */
-  public abstract Scorer scorer(AtomicReaderContext context, Bits acceptDocs) throws IOException;
+	public abstract Scorer scorer(AtomicReaderContext context, Bits acceptDocs) throws IOException;
 
   /**
    * Optional method, to return a {@link BulkScorer} to
@@ -126,49 +126,48 @@ public abstract class Weight {
    * passes them to a collector.
    * @throws IOException if there is a low-level I/O error
    */
-  public BulkScorer bulkScorer(AtomicReaderContext context, boolean scoreDocsInOrder, Bits acceptDocs) throws IOException {
+	public BulkScorer bulkScorer(AtomicReaderContext context, boolean scoreDocsInOrder, Bits acceptDocs) throws IOException {
 
-    Scorer scorer = scorer(context, acceptDocs);
-    if (scorer == null) {
-      // No docs match
-      return null;
-    }
+		Scorer scorer = scorer(context, acceptDocs);
+		if (scorer == null) {
+			// No docs match
+			return null;
+		}
 
-    // This impl always scores docs in order, so we can
-    // ignore scoreDocsInOrder:
-    return new DefaultBulkScorer(scorer);
-  }
+		// This impl always scores docs in order, so we can ignore scoreDocsInOrder:
+		return new DefaultBulkScorer(scorer);
+	}
 
   /** Just wraps a Scorer and performs top scoring using it. */
-  static class DefaultBulkScorer extends BulkScorer {
-    private final Scorer scorer;
+	static class DefaultBulkScorer extends BulkScorer {
+		private final Scorer scorer;
 
-    public DefaultBulkScorer(Scorer scorer) {
-      if (scorer == null) {
-        throw new NullPointerException();
-      }
-      this.scorer = scorer;
-    }
+		public DefaultBulkScorer(Scorer scorer) {
+			if (scorer == null) {
+				throw new NullPointerException();
+			}
+			this.scorer = scorer;
+		}
 
-    @Override
-    public boolean score(Collector collector, int max) throws IOException {
-      // TODO: this may be sort of weird, when we are
-      // embedded in a BooleanScorer, because we are
-      // called for every chunk of 2048 documents.  But,
-      // then, scorer is a FakeScorer in that case, so any
-      // Collector doing something "interesting" in
-      // setScorer will be forced to use BS2 anyways:
-      collector.setScorer(scorer);
-      if (max == DocIdSetIterator.NO_MORE_DOCS) {
-        scoreAll(collector, scorer);
-        return false;
-      } else {
-        int doc = scorer.docID();
-        if (doc < 0) {
-          doc = scorer.nextDoc();
-        }
-        return scoreRange(collector, scorer, doc, max);
-      }
+		@Override
+		public boolean score(Collector collector, int max) throws IOException {
+			// TODO: this may be sort of weird, when we are
+			// embedded in a BooleanScorer, because we are
+			// called for every chunk of 2048 documents. But,
+			// then, scorer is a FakeScorer in that case, so any
+			// Collector doing something "interesting" in
+			// setScorer will be forced to use BS2 anyways:
+			collector.setScorer(scorer);
+			if (max == DocIdSetIterator.NO_MORE_DOCS) {
+				scoreAll(collector, scorer);
+				return false;
+			} else {
+				int doc = scorer.docID();
+				if (doc < 0) {
+					doc = scorer.nextDoc();
+				}
+				return scoreRange(collector, scorer, doc, max);
+			}
     }
 
     /** Specialized method to bulk-score a range of hits; we

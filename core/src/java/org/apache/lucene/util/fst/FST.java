@@ -292,8 +292,8 @@ public final class FST<T> implements Accountable {
 
   // make a new empty FST, for building; Builder invokes this ctor
 	FST(INPUT_TYPE inputType, Outputs<T> outputs, boolean willPackFST, float acceptableOverheadRatio, boolean allowArrayArcs, int bytesPageBits) {
-    this.inputType = inputType;
-    this.outputs = outputs;
+		this.inputType = inputType;
+		this.outputs = outputs;
     this.allowArrayArcs = allowArrayArcs;
     version = VERSION_CURRENT;
 		bytes = new BytesStore(bytesPageBits);
@@ -316,14 +316,16 @@ public final class FST<T> implements Accountable {
   public static final int DEFAULT_MAX_BLOCK_BITS = Constants.JRE_IS_64BIT ? 30 : 28;
 
   /** Load a previously saved FST. */
-  public FST(DataInput in, Outputs<T> outputs) throws IOException {
-    this(in, outputs, DEFAULT_MAX_BLOCK_BITS);
-  }
+	public FST(DataInput in, Outputs<T> outputs) throws IOException {
+		this(in, outputs, DEFAULT_MAX_BLOCK_BITS);
+	}
 
-  /** Load a previously saved FST; maxBlockBits allows you to
-   *  control the size of the byte[] pages used to hold the FST bytes. */
-  public FST(DataInput in, Outputs<T> outputs, int maxBlockBits) throws IOException {
-    this.outputs = outputs;
+	/**
+	 * Load a previously saved FST; maxBlockBits allows you to control the size
+	 * of the byte[] pages used to hold the FST bytes.
+	 */
+	public FST(DataInput in, Outputs<T> outputs, int maxBlockBits) throws IOException {
+		this.outputs = outputs;
 
     if (maxBlockBits < 1 || maxBlockBits > 30) {
       throw new IllegalArgumentException("maxBlockBits should be 1 .. 30; got " + maxBlockBits);
@@ -336,24 +338,24 @@ public final class FST<T> implements Accountable {
     if (in.readByte() == 1) {
       // accepts empty string
       // 1 KB blocks:
-      BytesStore emptyBytes = new BytesStore(10);
-      int numBytes = in.readVInt();
-      emptyBytes.copyBytes(in, numBytes);
+			BytesStore emptyBytes = new BytesStore(10);
+			int numBytes = in.readVInt();
+			emptyBytes.copyBytes(in, numBytes);
 
       // De-serialize empty-string output:
-      BytesReader reader;
-      if (packed) {
-        reader = emptyBytes.getForwardReader();
-      } else {
-        reader = emptyBytes.getReverseReader();
-        // NoOutputs uses 0 bytes when writing its output,
-        // so we have to check here else BytesStore gets
-        // angry:
-        if (numBytes > 0) {
-          reader.setPosition(numBytes-1);
-        }
-      }
-      emptyOutput = outputs.readFinalOutput(reader);
+			BytesReader reader;
+			if (packed) {
+				reader = emptyBytes.getForwardReader();
+			} else {
+				reader = emptyBytes.getReverseReader();
+				// NoOutputs uses 0 bytes when writing its output,
+				// so we have to check here else BytesStore gets
+				// angry:
+				if (numBytes > 0) {
+					reader.setPosition(numBytes - 1);
+				}
+			}
+			emptyOutput = outputs.readFinalOutput(reader);
     } else {
       emptyOutput = null;
     }

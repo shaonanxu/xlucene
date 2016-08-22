@@ -53,7 +53,7 @@ import org.apache.lucene.util.packed.PackedInts;
 public class Builder<T> {
   private final NodeHash<T> dedupHash;
   private final FST<T> fst;
-  private final T NO_OUTPUT;
+	private final T NO_OUTPUT;
 
   // private static final boolean DEBUG = true;
 
@@ -86,9 +86,9 @@ public class Builder<T> {
    * boolean, int, Outputs, boolean, float,
    * boolean, int)} with pruning options turned off.
    */
-  public Builder(FST.INPUT_TYPE inputType, Outputs<T> outputs) {
-    this(inputType, 0, 0, true, true, Integer.MAX_VALUE, outputs, false, PackedInts.COMPACT, true, 15);
-  }
+	public Builder(FST.INPUT_TYPE inputType, Outputs<T> outputs) {
+		this(inputType, 0, 0, true, true, Integer.MAX_VALUE, outputs, false, PackedInts.COMPACT, true, 15);
+	}
 
   /**
    * Instantiates an FST/FSA builder with all the possible tuning and construction
@@ -150,13 +150,13 @@ public class Builder<T> {
 		this.shareMaxTailLength = shareMaxTailLength;
     this.doPackFST = doPackFST;
     this.acceptableOverheadRatio = acceptableOverheadRatio;
-    fst = new FST<>(inputType, outputs, doPackFST, acceptableOverheadRatio, allowArrayArcs, bytesPageBits);
+    	fst = new FST<>(inputType, outputs, doPackFST, acceptableOverheadRatio, allowArrayArcs, bytesPageBits);
 		if (doShareSuffix) {
 			dedupHash = new NodeHash<>(fst, fst.bytes.getReverseReader(false));
 		} else {
 			dedupHash = null;
 		}
-    NO_OUTPUT = outputs.getNoOutput();
+		NO_OUTPUT = outputs.getNoOutput();
 
     @SuppressWarnings({"rawtypes","unchecked"}) final UnCompiledNode<T>[] f = (UnCompiledNode<T>[]) new UnCompiledNode[10];
 		frontier = f;
@@ -179,15 +179,15 @@ public class Builder<T> {
 
 	private CompiledNode compileNode(UnCompiledNode<T> nodeIn, int tailLength) throws IOException {
 		final long node;
-    if (dedupHash != null && (doShareNonSingletonNodes || nodeIn.numArcs <= 1) && tailLength <= shareMaxTailLength) {
+		if (dedupHash != null && (doShareNonSingletonNodes || nodeIn.numArcs <= 1) && tailLength <= shareMaxTailLength) {	
 			if (nodeIn.numArcs == 0) {
 				node = fst.addNode(nodeIn);
 			} else {
 				node = dedupHash.add(nodeIn);
 			}
-    } else {
-      node = fst.addNode(nodeIn);
-    }
+		} else {
+			node = fst.addNode(nodeIn);
+		}
     assert node != -2;
 
 		nodeIn.clear();
@@ -202,16 +202,16 @@ public class Builder<T> {
 		final int downTo = Math.max(1, prefixLenPlus1);
 		for (int idx = lastInput.length(); idx >= downTo; idx--) {
 
-      boolean doPrune = false;
-      boolean doCompile = false;
+			boolean doPrune = false;
+			boolean doCompile = false;
 
-      final UnCompiledNode<T> node = frontier[idx];
-      final UnCompiledNode<T> parent = frontier[idx-1];
+			final UnCompiledNode<T> node = frontier[idx];
+			final UnCompiledNode<T> parent = frontier[idx - 1];
 
-      if (node.inputCount < minSuffixCount1) {
-        doPrune = true;
-        doCompile = true;
-      } else if (idx > prefixLenPlus1) {
+			if (node.inputCount < minSuffixCount1) {
+				doPrune = true;
+				doCompile = true;
+			} else if (idx > prefixLenPlus1) {
         // prune if parent's inputCount is less than suffixMinCount2
         if (parent.inputCount < minSuffixCount2 || (minSuffixCount2 == 1 && parent.inputCount == 1 && idx > 1)) {
           // my parent, about to be compiled, doesn't make the cut, so
@@ -311,7 +311,7 @@ public class Builder<T> {
    *  {@link ByteSequenceOutputs} or {@link
    *  IntSequenceOutputs}) then you cannot reuse across
    *  calls. */
-  public void add(IntsRef input, T output) throws IOException {
+	public void add(IntsRef input, T output) throws IOException {
     /*
     if (DEBUG) {
       BytesRef b = new BytesRef(input.length);
@@ -328,9 +328,9 @@ public class Builder<T> {
     */
 
     // De-dup NO_OUTPUT since it must be a singleton:
-    if (output.equals(NO_OUTPUT)) {
-      output = NO_OUTPUT;
-    }
+		if (output.equals(NO_OUTPUT)) {
+			output = NO_OUTPUT;
+		}
 
     assert lastInput.length() == 0 || input.compareTo(lastInput.get()) >= 0: "inputs are added out of order lastInput=" + lastInput.get() + " vs input=" + input;
     assert validOutput(output);
@@ -367,7 +367,7 @@ public class Builder<T> {
 		if (frontier.length < input.length + 1) {
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			final UnCompiledNode<T>[] next = new UnCompiledNode[ArrayUtil.oversize(input.length+1, RamUsageEstimator.NUM_BYTES_OBJECT_REF)];
-      System.arraycopy(frontier, 0, next, 0, frontier.length);
+			System.arraycopy(frontier, 0, next, 0, frontier.length);
 			for (int idx = frontier.length; idx < next.length; idx++) {
 				next[idx] = new UnCompiledNode<>(this, idx);
 			}
@@ -389,11 +389,10 @@ public class Builder<T> {
       lastNode.output = NO_OUTPUT;
     }
 
-    // push conflicting outputs forward, only as far as
-    // needed
-    for(int idx=1;idx<prefixLenPlus1;idx++) {
-      final UnCompiledNode<T> node = frontier[idx];
-      final UnCompiledNode<T> parentNode = frontier[idx-1];
+    // push conflicting outputs forward, only as far as needed
+		for (int idx = 1; idx < prefixLenPlus1; idx++) {
+			final UnCompiledNode<T> node = frontier[idx];
+			final UnCompiledNode<T> parentNode = frontier[idx - 1];
 
       final T lastOutput = parentNode.getLastOutput(input.ints[input.offset + idx - 1]);
       assert validOutput(lastOutput);
@@ -423,12 +422,11 @@ public class Builder<T> {
     } else {
       // this new arc is private to this new input; set its
       // arc output to the leftover output:
-      frontier[prefixLenPlus1-1].setLastOutput(input.ints[input.offset + prefixLenPlus1-1], output);
-    }
+			frontier[prefixLenPlus1 - 1].setLastOutput(input.ints[input.offset + prefixLenPlus1 - 1], output);
+		}
 
     // save last input
 		lastInput.copyInts(input);
-
     //System.out.println("  count[0]=" + frontier[0].inputCount);
   }
 
@@ -502,17 +500,18 @@ public class Builder<T> {
     return fst.ramBytesUsed();
   }
 
-  static final class CompiledNode implements Node {
-    long node;
-    @Override
-    public boolean isCompiled() {
-      return true;
-    }
-  }
+	static final class CompiledNode implements Node {
+		long node;
+
+		@Override
+		public boolean isCompiled() {
+			return true;
+		}
+	}
 
   /** Expert: holds a pending (seen but not yet serialized) Node. */
 	public static final class UnCompiledNode<T> implements Node {
-    final Builder<T> owner;
+		final Builder<T> owner;
 		public int numArcs;
 		public Arc<T>[] arcs;
     // TODO: instead of recording isFinal/output on the
@@ -541,10 +540,10 @@ public class Builder<T> {
 			this.depth = depth;
 		}
 
-    @Override
-    public boolean isCompiled() {
-      return false;
-    }
+		@Override
+		public boolean isCompiled() {
+			return false;
+		}
 
     public void clear() {
       numArcs = 0;

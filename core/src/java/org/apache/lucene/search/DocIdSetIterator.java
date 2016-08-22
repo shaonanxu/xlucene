@@ -122,7 +122,7 @@ public abstract class DocIdSetIterator {
    *
    * @since 2.9
    */
-  public abstract int advance(int target) throws IOException;
+	public abstract int advance(int target) throws IOException;
 
   /** Slow (linear) implementation of {@link #advance} relying on
    *  {@link #nextDoc()} to advance beyond the target position. */

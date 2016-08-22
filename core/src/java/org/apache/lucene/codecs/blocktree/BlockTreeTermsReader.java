@@ -82,7 +82,7 @@ public class BlockTreeTermsReader extends FieldsProducer {
   // produce DocsEnum on demand
   final PostingsReaderBase postingsReader;
 
-  private final TreeMap<String,FieldReader> fields = new TreeMap<>();
+	private final TreeMap<String, FieldReader> fields = new TreeMap<>();
 
   /** File offset where the directory starts in the terms file. */
   private long dirOffset;
@@ -95,16 +95,12 @@ public class BlockTreeTermsReader extends FieldsProducer {
   private final int version;
 
   /** Sole constructor. */
-  public BlockTreeTermsReader(Directory dir, FieldInfos fieldInfos, SegmentInfo info,
-                              PostingsReaderBase postingsReader, IOContext ioContext,
-                              String segmentSuffix, int indexDivisor)
-    throws IOException {
+	public BlockTreeTermsReader(Directory dir, FieldInfos fieldInfos,
+			SegmentInfo info, PostingsReaderBase postingsReader, IOContext ioContext, String segmentSuffix, int indexDivisor) throws IOException {
     
-    this.postingsReader = postingsReader;
-
-    this.segment = info.name;
-    in = dir.openInput(IndexFileNames.segmentFileName(segment, segmentSuffix, BlockTreeTermsWriter.TERMS_EXTENSION),
-                       ioContext);
+		this.postingsReader = postingsReader;
+    	this.segment = info.name;
+    	in = dir.openInput(IndexFileNames.segmentFileName(segment, segmentSuffix, BlockTreeTermsWriter.TERMS_EXTENSION), ioContext);
 
     boolean success = false;
     IndexInput indexIn = null;
@@ -112,9 +108,8 @@ public class BlockTreeTermsReader extends FieldsProducer {
     try {
       version = readHeader(in);
       if (indexDivisor != -1) {
-        indexIn = dir.openInput(IndexFileNames.segmentFileName(segment, segmentSuffix, BlockTreeTermsWriter.TERMS_INDEX_EXTENSION),
-                                ioContext);
-        int indexVersion = readIndexHeader(indexIn);
+				indexIn = dir.openInput(IndexFileNames.segmentFileName(segment, segmentSuffix, BlockTreeTermsWriter.TERMS_INDEX_EXTENSION), ioContext);
+				int indexVersion = readIndexHeader(indexIn);
         if (indexVersion != version) {
           throw new CorruptIndexException("mixmatched version files: " + in + "=" + version + "," + indexIn + "=" + indexVersion);
         }
@@ -138,36 +133,36 @@ public class BlockTreeTermsReader extends FieldsProducer {
       }
 
       // Read per-field details
-      seekDir(in, dirOffset);
-      if (indexDivisor != -1) {
-        seekDir(indexIn, indexDirOffset);
-      }
+			seekDir(in, dirOffset);
+			if (indexDivisor != -1) {
+				seekDir(indexIn, indexDirOffset);
+			}
 
-      final int numFields = in.readVInt();
+			final int numFields = in.readVInt();
       if (numFields < 0) {
         throw new CorruptIndexException("invalid numFields: " + numFields + " (resource=" + in + ")");
       }
 
-      for(int i=0;i<numFields;i++) {
-        final int field = in.readVInt();
-        final long numTerms = in.readVLong();
+			for (int i = 0; i < numFields; i++) {
+				final int field = in.readVInt();
+				final long numTerms = in.readVLong();
         if (numTerms <= 0) {
           throw new CorruptIndexException("Illegal numTerms for field number: " + field + " (resource=" + in + ")");
         }
-        final int numBytes = in.readVInt();
+				final int numBytes = in.readVInt();
         if (numBytes < 0) {
           throw new CorruptIndexException("invalid rootCode for field number: " + field + ", numBytes=" + numBytes + " (resource=" + in + ")");
         }
-        final BytesRef rootCode = new BytesRef(new byte[numBytes]);
-        in.readBytes(rootCode.bytes, 0, numBytes);
-        rootCode.length = numBytes;
-        final FieldInfo fieldInfo = fieldInfos.fieldInfo(field);
+				final BytesRef rootCode = new BytesRef(new byte[numBytes]);
+				in.readBytes(rootCode.bytes, 0, numBytes);
+				rootCode.length = numBytes;
+				final FieldInfo fieldInfo = fieldInfos.fieldInfo(field);
         if (fieldInfo == null) {
           throw new CorruptIndexException("invalid field number: " + field + ", resource=" + in + ")");
         }
-        final long sumTotalTermFreq = fieldInfo.getIndexOptions() == IndexOptions.DOCS_ONLY ? -1 : in.readVLong();
-        final long sumDocFreq = in.readVLong();
-        final int docCount = in.readVInt();
+		        final long sumTotalTermFreq = fieldInfo.getIndexOptions() == IndexOptions.DOCS_ONLY ? -1 : in.readVLong();
+				final long sumDocFreq = in.readVLong();
+				final int docCount = in.readVInt();
         final int longsSize = version >= BlockTreeTermsWriter.VERSION_META_ARRAY ? in.readVInt() : 0;
         if (longsSize < 0) {
           throw new CorruptIndexException("invalid longsSize for field: " + fieldInfo.name + ", longsSize=" + longsSize + " (resource=" + in + ")");
@@ -189,25 +184,25 @@ public class BlockTreeTermsReader extends FieldsProducer {
           throw new CorruptIndexException("invalid sumTotalTermFreq: " + sumTotalTermFreq + " sumDocFreq: " + sumDocFreq + " (resource=" + in + ")");
         }
         final long indexStartFP = indexDivisor != -1 ? indexIn.readVLong() : 0;
-        FieldReader previous = fields.put(fieldInfo.name,       
-                                          new FieldReader(this, fieldInfo, numTerms, rootCode, sumTotalTermFreq, sumDocFreq, docCount,
-                                                          indexStartFP, longsSize, indexIn, minTerm, maxTerm));
-        if (previous != null) {
-          throw new CorruptIndexException("duplicate field: " + fieldInfo.name + " (resource=" + in + ")");
-        }
-      }
-      if (indexDivisor != -1) {
-        indexIn.close();
-      }
+				FieldReader previous = 
+						fields.put(fieldInfo.name, new FieldReader(this, fieldInfo, numTerms, rootCode, sumTotalTermFreq, 
+								sumDocFreq, docCount, indexStartFP, longsSize, indexIn, minTerm, maxTerm));
+				if (previous != null) {
+					throw new CorruptIndexException("duplicate field: " + fieldInfo.name + " (resource=" + in + ")");
+				}
+			}
+			if (indexDivisor != -1) {
+				indexIn.close();
+			}
 
-      success = true;
-    } finally {
-      if (!success) {
-        // this.close() will close in:
-        IOUtils.closeWhileHandlingException(indexIn, this);
-      }
-    }
-  }
+			success = true;
+		} finally {
+			if (!success) {
+				// this.close() will close in:
+				IOUtils.closeWhileHandlingException(indexIn, this);
+			}
+		}
+	}
 
   private static BytesRef readBytesRef(IndexInput in) throws IOException {
     BytesRef bytes = new BytesRef();
@@ -273,11 +268,11 @@ public class BlockTreeTermsReader extends FieldsProducer {
     return Collections.unmodifiableSet(fields.keySet()).iterator();
   }
 
-  @Override
-  public Terms terms(String field) throws IOException {
-    assert field != null;
-    return fields.get(field);
-  }
+	@Override
+	public Terms terms(String field) throws IOException {
+		assert field != null;
+		return fields.get(field);
+	}
 
   @Override
   public int size() {

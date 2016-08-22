@@ -59,7 +59,7 @@ public final class SegmentInfo {
 
   private boolean isCompoundFile;
 
-  private Codec codec;
+	private Codec codec;
 
   private Map<String,String> diagnostics;
   
@@ -89,10 +89,10 @@ public final class SegmentInfo {
    * <p>Note: this is public only to allow access from
    * the codecs package.</p>
    */
-  public SegmentInfo(Directory dir, Version version, String name, int docCount,
-      boolean isCompoundFile, Codec codec, Map<String,String> diagnostics) {
-    this(dir, version, name, docCount, isCompoundFile, codec, diagnostics, null);
-  }
+	public SegmentInfo(Directory dir, Version version, String name,
+			int docCount, boolean isCompoundFile, Codec codec, Map<String, String> diagnostics) {
+		this(dir, version, name, docCount, isCompoundFile, codec, diagnostics, null);
+	}
 
   /**
    * Construct a new complete SegmentInfo instance from input.
@@ -102,15 +102,15 @@ public final class SegmentInfo {
   public SegmentInfo(Directory dir, Version version, String name, int docCount,
                      boolean isCompoundFile, Codec codec, Map<String,String> diagnostics, Map<String,String> attributes) {
     assert !(dir instanceof TrackingDirectoryWrapper);
-    this.dir = dir;
-    this.version = version;
-    this.name = name;
-    this.docCount = docCount;
-    this.isCompoundFile = isCompoundFile;
-    this.codec = codec;
-    this.diagnostics = diagnostics;
-    this.attributes = attributes;
-  }
+		this.dir = dir;
+		this.version = version;
+		this.name = name;
+		this.docCount = docCount;
+		this.isCompoundFile = isCompoundFile;
+		this.codec = codec;
+		this.diagnostics = diagnostics;
+		this.attributes = attributes;
+	}
 
   /**
    * @deprecated separate norms are not supported in >= 4.0
@@ -148,9 +148,9 @@ public final class SegmentInfo {
   }
 
   /** Return {@link Codec} that wrote this segment. */
-  public Codec getCodec() {
-    return codec;
-  }
+	public Codec getCodec() {
+		return codec;
+	}
 
   /** Returns number of documents in this segment (deletions
    *  are not taken into account). */

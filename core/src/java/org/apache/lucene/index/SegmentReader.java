@@ -96,16 +96,16 @@ public final class SegmentReader extends AtomicReader implements Accountable {
    * @throws IOException if there is a low-level IO error
    */
   // TODO: why is this public?
-  public SegmentReader(SegmentCommitInfo si, int termInfosIndexDivisor, IOContext context) throws IOException {
-    this.si = si;
+	public SegmentReader(SegmentCommitInfo si, int termInfosIndexDivisor, IOContext context) throws IOException {
+		this.si = si;
     // TODO if the segment uses CFS, we may open the CFS file twice: once for
     // reading the FieldInfos (if they are not gen'd) and second time by
     // SegmentCoreReaders. We can open the CFS here and pass to SCR, but then it
     // results in less readable code (resource not closed where it was opened).
     // Best if we could somehow read FieldInfos in SCR but not keep it there, but
     // constructors don't allow returning two things...
-    fieldInfos = readFieldInfos(si);
-    core = new SegmentCoreReaders(this, si.info.dir, si, context, termInfosIndexDivisor);
+		fieldInfos = readFieldInfos(si);
+		core = new SegmentCoreReaders(this, si.info.dir, si, context, termInfosIndexDivisor);
     segDocValues = new SegmentDocValues();
     
     boolean success = false;
@@ -284,7 +284,7 @@ public final class SegmentReader extends AtomicReader implements Accountable {
     
     try {
       final String segmentSuffix = info.getFieldInfosGen() == -1 ? "" : Long.toString(info.getFieldInfosGen(), Character.MAX_RADIX);
-      Codec codec = info.info.getCodec();
+			Codec codec = info.info.getCodec();
       FieldInfosFormat fisFormat = codec.fieldInfosFormat();
       return fisFormat.getFieldInfosReader().read(dir, info.info.name, segmentSuffix, IOContext.READONCE);
     } finally {
@@ -335,11 +335,11 @@ public final class SegmentReader extends AtomicReader implements Accountable {
     getFieldsReader().visitDocument(docID, visitor);
   }
 
-  @Override
-  public Fields fields() {
-    ensureOpen();
-    return core.fields;
-  }
+	@Override
+	public Fields fields() {
+		ensureOpen();
+		return core.fields;
+	}
 
   @Override
   public int numDocs() {

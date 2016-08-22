@@ -91,11 +91,11 @@ public final class BytesRef implements Comparable<BytesRef>,Cloneable {
    * unpaired surrogates or invalid UTF16 code units.
    * @deprecated {@link BytesRef} should not be used as a buffer, use {@link BytesRefBuilder} instead
    */
-  @Deprecated
-  public void copyChars(CharSequence text) {
-    assert offset == 0;   // TODO broken if offset != 0
-    UnicodeUtil.UTF16toUTF8(text, this);
-  }
+	@Deprecated
+	public void copyChars(CharSequence text) {
+		assert offset == 0; // TODO broken if offset != 0
+		UnicodeUtil.UTF16toUTF8(text, this);
+	}
   
   /**
    * Expert: compares the bytes against another BytesRef,

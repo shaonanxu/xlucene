@@ -196,7 +196,7 @@ import org.apache.lucene.util.packed.PackedInts;
  */
 public final class BlockTreeTermsWriter extends FieldsConsumer {
 
-  static final Outputs<BytesRef> FST_OUTPUTS = ByteSequenceOutputs.getSingleton();
+	static final Outputs<BytesRef> FST_OUTPUTS = ByteSequenceOutputs.getSingleton();
 
   static final BytesRef NO_OUTPUT = FST_OUTPUTS.getNoOutput();
 
@@ -287,17 +287,12 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
 
   // private final String segment;
 
-  /** Create a new writer.  The number of items (terms or
-   *  sub-blocks) per block will aim to be between
-   *  minItemsPerBlock and maxItemsPerBlock, though in some
-   *  cases the blocks may be smaller than the min. */
-  public BlockTreeTermsWriter(
-                              SegmentWriteState state,
-                              PostingsWriterBase postingsWriter,
-                              int minItemsInBlock,
-                              int maxItemsInBlock)
-    throws IOException
-  {
+	/**
+	 * Create a new writer. The number of items (terms or sub-blocks) per block
+	 * will aim to be between minItemsPerBlock and maxItemsPerBlock, though in
+	 * some cases the blocks may be smaller than the min.
+	 */
+	public BlockTreeTermsWriter(SegmentWriteState state, PostingsWriterBase postingsWriter, int minItemsInBlock, int maxItemsInBlock) throws IOException {
     if (minItemsInBlock <= 1) {
       throw new IllegalArgumentException("minItemsInBlock must be >= 2; got " + minItemsInBlock);
     }
@@ -311,23 +306,24 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
       throw new IllegalArgumentException("maxItemsInBlock must be at least 2*(minItemsInBlock-1); got maxItemsInBlock=" + maxItemsInBlock + " minItemsInBlock=" + minItemsInBlock);
     }
 
-    maxDoc = state.segmentInfo.getDocCount();
+		maxDoc = state.segmentInfo.getDocCount();
 
-    final String termsFileName = IndexFileNames.segmentFileName(state.segmentInfo.name, state.segmentSuffix, TERMS_EXTENSION);
-    out = state.directory.createOutput(termsFileName, state.context);
-    boolean success = false;
-    IndexOutput indexOut = null;
-    try {
-      fieldInfos = state.fieldInfos;
-      this.minItemsInBlock = minItemsInBlock;
-      this.maxItemsInBlock = maxItemsInBlock;
-      writeHeader(out);
+		final String termsFileName = IndexFileNames.segmentFileName(state.segmentInfo.name, state.segmentSuffix, TERMS_EXTENSION);
+		out = state.directory.createOutput(termsFileName, state.context);
+		
+		boolean success = false;
+		IndexOutput indexOut = null;
+		try {
+			fieldInfos = state.fieldInfos;
+			this.minItemsInBlock = minItemsInBlock;
+			this.maxItemsInBlock = maxItemsInBlock;
+			writeHeader(out);
 
       //DEBUG = state.segmentName.equals("_4a");
 
-      final String termsIndexFileName = IndexFileNames.segmentFileName(state.segmentInfo.name, state.segmentSuffix, TERMS_INDEX_EXTENSION);
-      indexOut = state.directory.createOutput(termsIndexFileName, state.context);
-      writeIndexHeader(indexOut);
+			final String termsIndexFileName = IndexFileNames.segmentFileName(state.segmentInfo.name, state.segmentSuffix, TERMS_INDEX_EXTENSION);
+			indexOut = state.directory.createOutput(termsIndexFileName, state.context);
+			writeIndexHeader(indexOut);
 
       currentField = null;
       this.postingsWriter = postingsWriter;
@@ -335,15 +331,15 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
 
       // System.out.println("BTW.init seg=" + state.segmentName);
 
-      postingsWriter.init(out);                          // have consumer write its format/header
-      success = true;
-    } finally {
-      if (!success) {
-        IOUtils.closeWhileHandlingException(out, indexOut);
-      }
-    }
-    this.indexOut = indexOut;
-  }
+			postingsWriter.init(out); // have consumer write its format/header
+			success = true;
+		} finally {
+			if (!success) {
+				IOUtils.closeWhileHandlingException(out, indexOut);
+			}
+		}
+		this.indexOut = indexOut;
+	}
 
   /** Writes the terms file header. */
   private void writeHeader(IndexOutput out) throws IOException {

@@ -26,9 +26,9 @@ public class IntsRefBuilder {
   private final IntsRef ref;
 
   /** Sole constructor. */
-  public IntsRefBuilder() {
-    ref = new IntsRef();
-  }
+	public IntsRefBuilder() {
+		ref = new IntsRef();
+	}
 
   /** Return a reference to the ints of this builder. */
   public int[] ints() {

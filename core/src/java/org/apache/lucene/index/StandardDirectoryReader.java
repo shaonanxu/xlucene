@@ -49,27 +49,27 @@ final class StandardDirectoryReader extends DirectoryReader {
 
   /** called from DirectoryReader.open(...) methods */
 	static DirectoryReader open(final Directory directory, final IndexCommit commit, final int termInfosIndexDivisor) throws IOException {
-    return (DirectoryReader) new SegmentInfos.FindSegmentsFile(directory) {
-      @Override
-      protected Object doBody(String segmentFileName) throws IOException {
-        SegmentInfos sis = new SegmentInfos();
-        sis.read(directory, segmentFileName);
-        final SegmentReader[] readers = new SegmentReader[sis.size()];
+		return (DirectoryReader) new SegmentInfos.FindSegmentsFile(directory) {
+			@Override
+			protected Object doBody(String segmentFileName) throws IOException {
+				SegmentInfos sis = new SegmentInfos();
+				sis.read(directory, segmentFileName);
+				final SegmentReader[] readers = new SegmentReader[sis.size()];
 				for (int i = sis.size() - 1; i >= 0; i--) {
-          boolean success = false;
-          try {
-            readers[i] = new SegmentReader(sis.info(i), termInfosIndexDivisor, IOContext.READ);
-            success = true;
-          } finally {
-            if (!success) {
-              IOUtils.closeWhileHandlingException(readers);
-            }
-          }
-        }
-        return new StandardDirectoryReader(directory, readers, null, sis, termInfosIndexDivisor, false);
-      }
-    }.run(commit);
-  }
+					boolean success = false;
+					try {
+						readers[i] = new SegmentReader(sis.info(i), termInfosIndexDivisor, IOContext.READ);
+						success = true;
+					} finally {
+						if (!success) {
+							IOUtils.closeWhileHandlingException(readers);
+						}
+					}
+				}
+				return new StandardDirectoryReader(directory, readers, null, sis, termInfosIndexDivisor, false);
+			}
+		}.run(commit);
+	}
 
   /** Used by near real-time search */
   static DirectoryReader open(IndexWriter writer, SegmentInfos infos, boolean applyAllDeletes) throws IOException {

@@ -49,8 +49,8 @@ public class BooleanFilter extends Filter implements Iterable<FilterClause> {
    * Returns the a DocIdSetIterator representing the Boolean composition
    * of the filters that have been added.
    */
-  @Override
-  public DocIdSet getDocIdSet(AtomicReaderContext context, Bits acceptDocs) throws IOException {
+	@Override
+	public DocIdSet getDocIdSet(AtomicReaderContext context, Bits acceptDocs) throws IOException {
     FixedBitSet res = null;
     final AtomicReader reader = context.reader();
     
@@ -83,42 +83,42 @@ public class BooleanFilter extends Filter implements Iterable<FilterClause> {
       }
     }
     
-    for (final FilterClause fc : clauses) {
-      if (fc.getOccur() == Occur.MUST) {
-        final DocIdSetIterator disi = getDISI(fc.getFilter(), context);
-        if (disi == null) {
-          return null; // no documents can match
-        }
-        if (res == null) {
-          res = new FixedBitSet(reader.maxDoc());
-          res.or(disi);
-        } else {
-          res.and(disi);
-        }
-      }
-    }
+		for (final FilterClause fc : clauses) {
+			if (fc.getOccur() == Occur.MUST) {
+				final DocIdSetIterator disi = getDISI(fc.getFilter(), context);
+				if (disi == null) {
+					return null; // no documents can match
+				}
+				if (res == null) {
+					res = new FixedBitSet(reader.maxDoc());
+					res.or(disi);
+				} else {
+					res.and(disi);
+				}
+			}
+		}
 
-    return BitsFilteredDocIdSet.wrap(res, acceptDocs);
-  }
+		return BitsFilteredDocIdSet.wrap(res, acceptDocs);
+	}
 
-  private static DocIdSetIterator getDISI(Filter filter, AtomicReaderContext context)
-      throws IOException {
-    // we dont pass acceptDocs, we will filter at the end using an additional filter
-    final DocIdSet set = filter.getDocIdSet(context, null);
-    return set == null ? null : set.iterator();
-  }
+	private static DocIdSetIterator getDISI(Filter filter, AtomicReaderContext context) throws IOException {
+		// we dont pass acceptDocs, we will filter at the end using an
+		// additional filter
+		final DocIdSet set = filter.getDocIdSet(context, null);
+		return set == null ? null : set.iterator();
+	}
 
   /**
   * Adds a new FilterClause to the Boolean Filter container
   * @param filterClause A FilterClause object containing a Filter and an Occur parameter
   */
-  public void add(FilterClause filterClause) {
-    clauses.add(filterClause);
-  }
-  
-  public final void add(Filter filter, Occur occur) {
-    add(new FilterClause(filter, occur));
-  }
+	public void add(FilterClause filterClause) {
+		clauses.add(filterClause);
+	}
+
+	public final void add(Filter filter, Occur occur) {
+		add(new FilterClause(filter, occur));
+	}
   
   /**
   * Returns the list of clauses

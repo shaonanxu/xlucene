@@ -429,28 +429,20 @@ public final class Lucene41PostingsFormat extends PostingsFormat {
     }
   }
 
-  @Override
-  public FieldsProducer fieldsProducer(SegmentReadState state) throws IOException {
-    PostingsReaderBase postingsReader = new Lucene41PostingsReader(state.directory,
-                                                                state.fieldInfos,
-                                                                state.segmentInfo,
-                                                                state.context,
-                                                                state.segmentSuffix);
-    boolean success = false;
-    try {
-      FieldsProducer ret = new BlockTreeTermsReader(state.directory,
-                                                    state.fieldInfos,
-                                                    state.segmentInfo,
-                                                    postingsReader,
-                                                    state.context,
-                                                    state.segmentSuffix,
-                                                    state.termsIndexDivisor);
-      success = true;
-      return ret;
-    } finally {
-      if (!success) {
-        IOUtils.closeWhileHandlingException(postingsReader);
-      }
-    }
-  }
+	@Override
+	public FieldsProducer fieldsProducer(SegmentReadState state) throws IOException {
+		PostingsReaderBase postingsReader = 
+				new Lucene41PostingsReader(state.directory, state.fieldInfos, state.segmentInfo, state.context, state.segmentSuffix);
+		boolean success = false;
+		try {
+			FieldsProducer ret = new BlockTreeTermsReader(state.directory, state.fieldInfos, state.segmentInfo, postingsReader,
+					state.context, state.segmentSuffix, state.termsIndexDivisor);
+			success = true;
+			return ret;
+		} finally {
+			if (!success) {
+				IOUtils.closeWhileHandlingException(postingsReader);
+			}
+		}
+	}
 }

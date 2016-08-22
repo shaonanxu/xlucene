@@ -26,8 +26,7 @@ import org.apache.lucene.util.RamUsageEstimator;
 import org.apache.lucene.util.StringHelper;
 
 /**
- * An FST {@link Outputs} implementation where each output
- * is a sequence of bytes.
+ * An FST {@link Outputs} implementation where each output is a sequence of bytes.
  *
  * @lucene.experimental
  */
@@ -35,14 +34,13 @@ import org.apache.lucene.util.StringHelper;
 public final class ByteSequenceOutputs extends Outputs<BytesRef> {
 
   private final static BytesRef NO_OUTPUT = new BytesRef();
-  private final static ByteSequenceOutputs singleton = new ByteSequenceOutputs();
+	private final static ByteSequenceOutputs singleton = new ByteSequenceOutputs();
 
-  private ByteSequenceOutputs() {
-  }
+	private ByteSequenceOutputs() {}
 
-  public static ByteSequenceOutputs getSingleton() {
-    return singleton;
-  }
+	public static ByteSequenceOutputs getSingleton() {
+		return singleton;
+	}
 
   @Override
   public BytesRef common(BytesRef output1, BytesRef output2) {

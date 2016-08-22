@@ -67,22 +67,22 @@ final class SegmentTermsEnum extends TermsEnum {
 
   @SuppressWarnings({"rawtypes","unchecked"}) private FST.Arc<BytesRef>[] arcs = new FST.Arc[1];
 
-  public SegmentTermsEnum(FieldReader fr) throws IOException {
-    this.fr = fr;
+	public SegmentTermsEnum(FieldReader fr) throws IOException {
+		this.fr = fr;
 
     // if (DEBUG) {
     //   System.out.println("BTTR.init seg=" + fr.parent.segment);
     // }
-    stack = new SegmentTermsEnumFrame[0];
+		stack = new SegmentTermsEnumFrame[0];
         
     // Used to hold seek by TermState, or cached seek
-    staticFrame = new SegmentTermsEnumFrame(this, -1);
+		staticFrame = new SegmentTermsEnumFrame(this, -1);
 
-    if (fr.index == null) {
-      fstReader = null;
-    } else {
-      fstReader = fr.index.getBytesReader();
-    }
+		if (fr.index == null) {
+			fstReader = null;
+		} else {
+			fstReader = fr.index.getBytesReader();
+		}
 
     // Init w/ root block; don't use index since it may
     // not (and need not) have been loaded
@@ -90,18 +90,18 @@ final class SegmentTermsEnum extends TermsEnum {
       arcs[arcIdx] = new FST.Arc<>();
     }
 
-    currentFrame = staticFrame;
-    final FST.Arc<BytesRef> arc;
-    if (fr.index != null) {
-      arc = fr.index.getFirstArc(arcs[0]);
+		currentFrame = staticFrame;
+		final FST.Arc<BytesRef> arc;
+		if (fr.index != null) {
+			arc = fr.index.getFirstArc(arcs[0]);
       // Empty string prefix must have an output in the index!
       assert arc.isFinal();
-    } else {
-      arc = null;
-    }
+		} else {
+			arc = null;
+		}
     //currentFrame = pushFrame(arc, rootCode, 0);
     //currentFrame.loadBlock();
-    validIndexPrefix = 0;
+		validIndexPrefix = 0;
     // if (DEBUG) {
     //   System.out.println("init frame state " + currentFrame.ord);
     //   printSeekState();

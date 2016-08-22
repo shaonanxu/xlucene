@@ -40,9 +40,9 @@ import org.apache.lucene.util.ToStringUtils;
 public class TermQuery extends Query {
 	private final Term term;
   private final int docFreq;
-  private final TermContext perReaderTermState;
+	private final TermContext perReaderTermState;
 
-  final class TermWeight extends Weight {
+	final class TermWeight extends Weight {
     private final Similarity similarity;
     private final Similarity.SimWeight stats;
     private final TermContext termStates;
@@ -86,17 +86,17 @@ public class TermQuery extends Query {
      * Returns a {@link TermsEnum} positioned at this weights Term or null if
      * the term does not exist in the given context
      */
-    private TermsEnum getTermsEnum(AtomicReaderContext context) throws IOException {
-      final TermState state = termStates.get(context.ord);
-      if (state == null) { // term is not present in that reader
+		private TermsEnum getTermsEnum(AtomicReaderContext context) throws IOException {
+			final TermState state = termStates.get(context.ord);
+			if (state == null) { // term is not present in that reader
         assert termNotInReader(context.reader(), term) : "no termstate found but term exists in reader term=" + term;
-        return null;
-      }
+        		return null;
+			}
       //System.out.println("LD=" + reader.getLiveDocs() + " set?=" + (reader.getLiveDocs() != null ? reader.getLiveDocs().get(0) : "null"));
-      final TermsEnum termsEnum = context.reader().terms(term.field()).iterator(null);
-      termsEnum.seekExact(term.bytes(), state);
-      return termsEnum;
-    }
+			final TermsEnum termsEnum = context.reader().terms(term.field()).iterator(null);
+			termsEnum.seekExact(term.bytes(), state);
+			return termsEnum;
+		}
     
     private boolean termNotInReader(AtomicReader reader, Term term) throws IOException {
       // only called from assert
@@ -130,14 +130,14 @@ public class TermQuery extends Query {
     this(t, -1);
   }
 
-  /** Expert: constructs a TermQuery that will use the
-   *  provided docFreq instead of looking up the docFreq
-   *  against the searcher. */
-  public TermQuery(Term t, int docFreq) {
-    term = t;
-    this.docFreq = docFreq;
-    perReaderTermState = null;
-  }
+	/**
+	 * Expert: constructs a TermQuery that will use the provided docFreq instead of looking up the docFreq against the searcher.
+	 */
+	public TermQuery(Term t, int docFreq) {
+		term = t;
+		this.docFreq = docFreq;
+		perReaderTermState = null;
+	}
   
   /** Expert: constructs a TermQuery that will use the
    *  provided docFreq instead of looking up the docFreq
@@ -153,21 +153,21 @@ public class TermQuery extends Query {
   public Term getTerm() { return term; }
 
   @Override
-  public Weight createWeight(IndexSearcher searcher) throws IOException {
-    final IndexReaderContext context = searcher.getTopReaderContext();
-    final TermContext termState;
-    if (perReaderTermState == null || perReaderTermState.topReaderContext != context) {
-      // make TermQuery single-pass if we don't have a PRTS or if the context differs!
+	public Weight createWeight(IndexSearcher searcher) throws IOException {
+		final IndexReaderContext context = searcher.getTopReaderContext();
+		final TermContext termState;
+		if (perReaderTermState == null || perReaderTermState.topReaderContext != context) {
+			// make TermQuery single-pass if we don't have a PRTS or if the context differs!
 			termState = TermContext.build(context, term);
-    } else {
-     // PRTS was pre-build for this IS
-     termState = this.perReaderTermState;
-    }
+		} else {
+			// PRTS was pre-build for this IS
+			termState = this.perReaderTermState;
+		}
 
     // we must not ignore the given docFreq - if set use the given value (lie)
-    if (docFreq != -1)
-      termState.setDocFreq(docFreq);
-    
+		if (docFreq != -1)
+			termState.setDocFreq(docFreq);
+
 		return new TermWeight(searcher, termState);
 	}
 

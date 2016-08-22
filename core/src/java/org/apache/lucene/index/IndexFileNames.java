@@ -94,14 +94,14 @@ public final class IndexFileNames {
       // The '6' part in the length is: 1 for '.', 1 for '_' and 4 as estimate
       // to the gen length as string (hopefully an upper limit so SB won't
       // expand in the middle.
-      StringBuilder res = new StringBuilder(base.length() + 6 + ext.length())
-          .append(base).append('_').append(Long.toString(gen, Character.MAX_RADIX));
-      if (ext.length() > 0) {
-        res.append('.').append(ext);
-      }
-      return res.toString();
-    }
-  }
+			StringBuilder res = new StringBuilder(base.length() + 6
+					+ ext.length()).append(base).append('_').append(Long.toString(gen, Character.MAX_RADIX));
+			if (ext.length() > 0) {
+				res.append('.').append(ext);
+			}
+			return res.toString();
+		}
+	}
 
   /**
    * Returns a file name that includes the given segment name, your own custom

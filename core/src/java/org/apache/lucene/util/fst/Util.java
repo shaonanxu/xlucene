@@ -860,13 +860,13 @@ public final class Util {
 
   /** Just takes unsigned byte values from the BytesRef and
    *  converts into an IntsRef. */
-  public static IntsRef toIntsRef(BytesRef input, IntsRefBuilder scratch) {
-    scratch.clear();
-    for(int i=0;i<input.length;i++) {
-      scratch.append(input.bytes[i+input.offset] & 0xFF);
-    }
-    return scratch.get();
-  }
+	public static IntsRef toIntsRef(BytesRef input, IntsRefBuilder scratch) {
+		scratch.clear();
+		for (int i = 0; i < input.length; i++) {
+			scratch.append(input.bytes[i + input.offset] & 0xFF);
+		}
+		return scratch.get();
+	}
 
   /** Just converts IntsRef to BytesRef; you must ensure the
    *  int values fit into a byte. */

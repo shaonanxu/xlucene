@@ -112,10 +112,10 @@ final class SegmentCoreReaders implements Accountable {
       final FieldInfos fieldInfos = owner.fieldInfos;
       
       this.termsIndexDivisor = termsIndexDivisor;
-      final PostingsFormat format = codec.postingsFormat();
-      final SegmentReadState segmentReadState = new SegmentReadState(cfsDir, si.info, fieldInfos, context, termsIndexDivisor);
+			final PostingsFormat format = codec.postingsFormat();
+			final SegmentReadState segmentReadState = new SegmentReadState(cfsDir, si.info, fieldInfos, context, termsIndexDivisor);
       // Ask codec for its Fields
-      fields = format.fieldsProducer(segmentReadState);
+			fields = format.fieldsProducer(segmentReadState);
       assert fields != null;
       // ask codec for its Norms: 
       // TODO: since we don't write any norms file if there are no norms,

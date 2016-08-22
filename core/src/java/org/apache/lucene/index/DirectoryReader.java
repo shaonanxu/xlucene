@@ -63,9 +63,9 @@ public abstract class DirectoryReader extends BaseCompositeReader<AtomicReader> 
    * @param directory the index directory
    * @throws IOException if there is a low-level IO error
    */
-  public static DirectoryReader open(final Directory directory) throws IOException {
-    return StandardDirectoryReader.open(directory, null, DEFAULT_TERMS_INDEX_DIVISOR);
-  }
+	public static DirectoryReader open(final Directory directory) throws IOException {
+		return StandardDirectoryReader.open(directory, null, DEFAULT_TERMS_INDEX_DIVISOR);
+	}
   
   /** Expert: Returns a IndexReader reading the index in the given
    *  Directory with the given termInfosIndexDivisor.

@@ -23,8 +23,8 @@ import java.io.IOException;
 import org.apache.lucene.index.Fields;
 import org.apache.lucene.util.Accountable;
 
-/** Abstract API that produces terms, doc, freq, prox, offset and
- *  payloads postings.  
+/**
+ * Abstract API that produces terms, doc, freq, prox, offset and payloads postings.
  *
  * @lucene.experimental
  */
@@ -32,8 +32,7 @@ import org.apache.lucene.util.Accountable;
 public abstract class FieldsProducer extends Fields implements Closeable, Accountable {
   /** Sole constructor. (For invocation by subclass 
    *  constructors, typically implicit.) */
-  protected FieldsProducer() {
-  }
+	protected FieldsProducer() {}
 
   @Override
   public abstract void close() throws IOException;

@@ -73,9 +73,9 @@ public class BooleanQuery extends Query implements Iterable<BooleanClause> {
   private final boolean disableCoord;
 
   /** Constructs an empty boolean query. */
-  public BooleanQuery() {
-    disableCoord = false;
-  }
+	public BooleanQuery() {
+		disableCoord = false;
+	}
 
   /** Constructs an empty boolean query.
    *
@@ -139,13 +139,12 @@ public class BooleanQuery extends Query implements Iterable<BooleanClause> {
    * @throws TooManyClauses if the new number of clauses exceeds the maximum clause number
    * @see #getMaxClauseCount()
    */
-  public void add(BooleanClause clause) {
-    if (clauses.size() >= maxClauseCount) {
-      throw new TooManyClauses();
-    }
-
-    clauses.add(clause);
-  }
+	public void add(BooleanClause clause) {
+		if (clauses.size() >= maxClauseCount) {
+			throw new TooManyClauses();
+		}
+		clauses.add(clause);
+	}
 
   /** Returns the set of clauses in this query. */
   public BooleanClause[] getClauses() {
@@ -351,21 +350,21 @@ public class BooleanQuery extends Query implements Iterable<BooleanClause> {
       List<Scorer> prohibited = new ArrayList<>();
       List<Scorer> optional = new ArrayList<>();
       Iterator<BooleanClause> cIter = clauses.iterator();
-      for (Weight w  : weights) {
-        BooleanClause c =  cIter.next();
-        Scorer subScorer = w.scorer(context, acceptDocs);
-        if (subScorer == null) {
-          if (c.isRequired()) {
-            return null;
-          }
-        } else if (c.isRequired()) {
-          required.add(subScorer);
-        } else if (c.isProhibited()) {
-          prohibited.add(subScorer);
-        } else {
-          optional.add(subScorer);
-        }
-      }
+			for (Weight w : weights) {
+				BooleanClause c = cIter.next();
+				Scorer subScorer = w.scorer(context, acceptDocs);
+				if (subScorer == null) {
+					if (c.isRequired()) {
+						return null;
+					}
+				} else if (c.isRequired()) {
+					required.add(subScorer);
+				} else if (c.isProhibited()) {
+					prohibited.add(subScorer);
+				} else {
+					optional.add(subScorer);
+				}
+			}
       
       // scorer simplifications:
       
@@ -404,7 +403,7 @@ public class BooleanQuery extends Query implements Iterable<BooleanClause> {
       // optional side must match. otherwise its required + optional, factoring the
       // number of optional terms into the coord calculation
       
-      Scorer req = excl(req(required, true), prohibited);
+			Scorer req = excl(req(required, true), prohibited);
       Scorer opt = opt(optional, minShouldMatch, true);
 
       // TODO: clean this up: its horrible

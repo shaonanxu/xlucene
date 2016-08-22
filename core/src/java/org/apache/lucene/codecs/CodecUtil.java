@@ -141,22 +141,23 @@ public final class CodecUtil {
    *  #checkHeader(DataInput,String,int,int)} except this
    *  version assumes the first int has already been read
    *  and validated from the input. */
-  public static int checkHeaderNoMagic(DataInput in, String codec, int minVersion, int maxVersion) throws IOException {
-    final String actualCodec = in.readString();
-    if (!actualCodec.equals(codec)) {
-      throw new CorruptIndexException("codec mismatch: actual codec=" + actualCodec + " vs expected codec=" + codec + " (resource: " + in + ")");
-    }
+	public static int checkHeaderNoMagic(DataInput in, String codec, int minVersion, int maxVersion) throws IOException {
+		final String actualCodec = in.readString();
+		if (!actualCodec.equals(codec)) {
+			throw new CorruptIndexException("codec mismatch: actual codec="
+					+ actualCodec + " vs expected codec=" + codec + " (resource: " + in + ")");
+		}
 
-    final int actualVersion = in.readInt();
-    if (actualVersion < minVersion) {
-      throw new IndexFormatTooOldException(in, actualVersion, minVersion, maxVersion);
-    }
-    if (actualVersion > maxVersion) {
-      throw new IndexFormatTooNewException(in, actualVersion, minVersion, maxVersion);
-    }
+		final int actualVersion = in.readInt();
+		if (actualVersion < minVersion) {
+			throw new IndexFormatTooOldException(in, actualVersion, minVersion, maxVersion);
+		}
+		if (actualVersion > maxVersion) {
+			throw new IndexFormatTooNewException(in, actualVersion, minVersion, maxVersion);
+		}
 
-    return actualVersion;
-  }
+		return actualVersion;
+	}
   
   /**
    * Writes a codec footer, which records both a checksum

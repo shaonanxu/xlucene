@@ -1,22 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="analysis/common/src/java"/>
-	<classpathentry kind="src" path="analysis/common/src/tools/java"/>
-	<classpathentry kind="src" path="analysis/icu/src/tools/java"/>
-	<classpathentry kind="src" path="analysis/kuromoji/src/java"/>
-	<classpathentry kind="src" path="analysis/kuromoji/src/tools/java"/>
-	<classpathentry kind="src" path="analysis/kuromoji/src/tools/test"/>
-	<classpathentry kind="src" path="analysis/morfologik/src/java"/>
-	<classpathentry kind="src" path="analysis/phonetic/src/java"/>
-	<classpathentry kind="src" path="analysis/smartcn/src/java"/>
-	<classpathentry kind="src" path="analysis/stempel/src/java"/>
-	<classpathentry kind="src" path="analysis/uima/src/java"/>
-	<classpathentry kind="src" path="benchmark/src/java"/>
 	<classpathentry kind="src" path="classification/src/java"/>
 	<classpathentry kind="src" path="codecs/src/java"/>
 	<classpathentry kind="src" path="core/src/java"/>
-	<classpathentry kind="src" path="demo/src/java"/>
-	<classpathentry kind="src" path="expressions/src/java"/>
 	<classpathentry kind="src" path="facet/src/java"/>
 	<classpathentry kind="src" path="grouping/src/java"/>
 	<classpathentry kind="src" path="highlighter/src/java"/>

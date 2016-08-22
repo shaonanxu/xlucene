@@ -41,8 +41,7 @@ import org.apache.lucene.util.NamedSPILoader;
  * @lucene.experimental */
 public abstract class PostingsFormat implements NamedSPILoader.NamedSPI {
 
-  private static final NamedSPILoader<PostingsFormat> loader =
-    new NamedSPILoader<>(PostingsFormat.class);
+	private static final NamedSPILoader<PostingsFormat> loader = new NamedSPILoader<>(PostingsFormat.class);
 
   /** Zero-length {@code PostingsFormat} array. */
   public static final PostingsFormat[] EMPTY = new PostingsFormat[0];
@@ -84,7 +83,7 @@ public abstract class PostingsFormat implements NamedSPILoader.NamedSPI {
    *  IOExceptions are expected and will automatically cause a retry of the 
    *  segment opening logic with the newly revised segments.
    *  */
-  public abstract FieldsProducer fieldsProducer(SegmentReadState state) throws IOException;
+	public abstract FieldsProducer fieldsProducer(SegmentReadState state) throws IOException;
 
   @Override
   public String toString() {
@@ -92,13 +91,13 @@ public abstract class PostingsFormat implements NamedSPILoader.NamedSPI {
   }
   
   /** looks up a format by name */
-  public static PostingsFormat forName(String name) {
-    if (loader == null) {
-      throw new IllegalStateException("You called PostingsFormat.forName() before all formats could be initialized. "+
+	public static PostingsFormat forName(String name) {
+		if (loader == null) {
+			throw new IllegalStateException("You called PostingsFormat.forName() before all formats could be initialized. "+
           "This likely happens if you call it from a PostingsFormat's ctor.");
-    }
-    return loader.lookup(name);
-  }
+		}
+		return loader.lookup(name);
+	}
   
   /** returns a list of all available format names */
   public static Set<String> availablePostingsFormats() {

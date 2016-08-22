@@ -28,9 +28,9 @@ public class BytesRefBuilder {
   private final BytesRef ref;
 
   /** Sole constructor. */
-  public BytesRefBuilder() {
-    ref = new BytesRef();
-  }
+	public BytesRefBuilder() {
+		ref = new BytesRef();
+	}
 
   /** Return a reference to the bytes of this builder. */
   public byte[] bytes() {

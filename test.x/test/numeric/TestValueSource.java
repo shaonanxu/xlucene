@@ -2,7 +2,6 @@ package test.numeric;
 
 import java.io.IOException;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.Field.Store;
@@ -29,7 +28,7 @@ public class TestValueSource {
 	public static void main(String[] args) throws IOException {
 		
 		RAMDirectory d = new RAMDirectory();
-		IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_4_9, new StandardAnalyzer(Version.LUCENE_4_9));
+		IndexWriterConfig config = null; //new IndexWriterConfig(Version.LUCENE_4_9, new StandardAnalyzer(Version.LUCENE_4_9));
 		IndexWriter iw = new IndexWriter(d, config);
 		
 		

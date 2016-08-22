@@ -139,37 +139,37 @@ public final class RamUsageEstimator {
   /**
    * Initialize constants and try to collect information about the JVM internals. 
    */
-  static {
+	static {
     // Initialize empirically measured defaults. We'll modify them to the current
     // JVM settings later on if possible.
-    int referenceSize = Constants.JRE_IS_64BIT ? 8 : 4;
-    int objectHeader = Constants.JRE_IS_64BIT ? 16 : 8;
+		int referenceSize = Constants.JRE_IS_64BIT ? 8 : 4;
+		int objectHeader = Constants.JRE_IS_64BIT ? 16 : 8;
     // The following is objectHeader + NUM_BYTES_INT, but aligned (object alignment)
     // so on 64 bit JVMs it'll be align(16 + 4, @8) = 24.
-    int arrayHeader = Constants.JRE_IS_64BIT ? 24 : 12;
+		int arrayHeader = Constants.JRE_IS_64BIT ? 24 : 12;
 
     supportedFeatures = EnumSet.noneOf(JvmFeature.class);
 
-    Class<?> unsafeClass = null;
-    Object tempTheUnsafe = null;
-    try {
-      unsafeClass = Class.forName("sun.misc.Unsafe");
-      final Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
-      unsafeField.setAccessible(true);
-      tempTheUnsafe = unsafeField.get(null);
-    } catch (Exception e) {
+		Class<?> unsafeClass = null;
+		Object tempTheUnsafe = null;
+		try {
+			unsafeClass = Class.forName("sun.misc.Unsafe");
+			final Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
+			unsafeField.setAccessible(true);
+			tempTheUnsafe = unsafeField.get(null);
+		} catch (Exception e) {
       // Ignore.
-    }
-    theUnsafe = tempTheUnsafe;
+		}
+		theUnsafe = tempTheUnsafe;
 
     // get object reference size by getting scale factor of Object[] arrays:
-    try {
-      final Method arrayIndexScaleM = unsafeClass.getMethod("arrayIndexScale", Class.class);
-      referenceSize = ((Number) arrayIndexScaleM.invoke(theUnsafe, Object[].class)).intValue();
-      supportedFeatures.add(JvmFeature.OBJECT_REFERENCE_SIZE);
-    } catch (Exception e) {
+		try {
+			final Method arrayIndexScaleM = unsafeClass.getMethod("arrayIndexScale", Class.class);
+			referenceSize = ((Number) arrayIndexScaleM.invoke(theUnsafe, Object[].class)).intValue();
+			supportedFeatures.add(JvmFeature.OBJECT_REFERENCE_SIZE);
+		} catch (Exception e) {
       // ignore.
-    }
+		}
 
     // "best guess" based on reference size. We will attempt to modify
     // these to exact values if there is supported infrastructure.
@@ -212,7 +212,7 @@ public final class RamUsageEstimator {
 
     NUM_BYTES_OBJECT_REF = referenceSize;
     NUM_BYTES_OBJECT_HEADER = objectHeader;
-    NUM_BYTES_ARRAY_HEADER = arrayHeader;
+		NUM_BYTES_ARRAY_HEADER = arrayHeader;
     
     // Try to get the object alignment (the default seems to be 8 on Hotspot, 
     // regardless of the architecture).

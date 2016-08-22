@@ -99,21 +99,21 @@ public final class WAH8DocIdSet extends DocIdSet implements Accountable {
   };
 
   /** Same as {@link #intersect(Collection, int)} with the default index interval. */
-  public static WAH8DocIdSet intersect(Collection<WAH8DocIdSet> docIdSets) {
-    return intersect(docIdSets, DEFAULT_INDEX_INTERVAL);
-  }
+	public static WAH8DocIdSet intersect(Collection<WAH8DocIdSet> docIdSets) {
+		return intersect(docIdSets, DEFAULT_INDEX_INTERVAL);
+	}
 
   /**
    * Compute the intersection of the provided sets. This method is much faster than
    * computing the intersection manually since it operates directly at the byte level.
    */
-  public static WAH8DocIdSet intersect(Collection<WAH8DocIdSet> docIdSets, int indexInterval) {
-    switch (docIdSets.size()) {
-      case 0:
-        throw new IllegalArgumentException("There must be at least one set to intersect");
-      case 1:
-        return docIdSets.iterator().next();
-    }
+	public static WAH8DocIdSet intersect(Collection<WAH8DocIdSet> docIdSets, int indexInterval) {
+		switch (docIdSets.size()) {
+		case 0:
+			throw new IllegalArgumentException("There must be at least one set to intersect");
+		case 1:
+			return docIdSets.iterator().next();
+		}
     // The logic below is similar to ConjunctionScorer
     final int numSets = docIdSets.size();
     final Iterator[] iterators = new Iterator[numSets];
@@ -122,8 +122,8 @@ public final class WAH8DocIdSet extends DocIdSet implements Accountable {
       final Iterator it = set.iterator();
       iterators[i++] = it;
     }
-    Arrays.sort(iterators, SERIALIZED_LENGTH_COMPARATOR);
-    final WordBuilder builder = new WordBuilder().setIndexInterval(indexInterval);
+		Arrays.sort(iterators, SERIALIZED_LENGTH_COMPARATOR);
+		final WordBuilder builder = new WordBuilder().setIndexInterval(indexInterval);
     int wordNum = 0;
     main:
     while (true) {
@@ -142,26 +142,26 @@ public final class WAH8DocIdSet extends DocIdSet implements Accountable {
           wordNum = iterators[i].wordNum;
           continue main;
         }
-        assert iterators[i].wordNum == wordNum;
-        word &= iterators[i].word;
+				assert iterators[i].wordNum == wordNum;
+				word &= iterators[i].word;
         if (word == 0) {
           // There are common words, but they don't share any bit
           ++wordNum;
           continue main;
         }
       }
-      // Found a common word
-      assert word != 0;
-      builder.addWord(wordNum, word);
-      ++wordNum;
-    }
-    return builder.build();
-  }
+			// Found a common word
+			assert word != 0;
+			builder.addWord(wordNum, word);
+			++wordNum;
+		}
+		return builder.build();
+	}
 
   /** Same as {@link #union(Collection, int)} with the default index interval. */
-  public static WAH8DocIdSet union(Collection<WAH8DocIdSet> docIdSets) {
-    return union(docIdSets, DEFAULT_INDEX_INTERVAL);
-  }
+	public static WAH8DocIdSet union(Collection<WAH8DocIdSet> docIdSets) {
+		return union(docIdSets, DEFAULT_INDEX_INTERVAL);
+	}
 
   /**
    * Compute the union of the provided sets. This method is much faster than
@@ -213,30 +213,30 @@ public final class WAH8DocIdSet extends DocIdSet implements Accountable {
     return builder.build();
   }
 
-  static int wordNum(int docID) {
-    assert docID >= 0;
-    return docID >>> 3;
-  }
+	static int wordNum(int docID) {
+		assert docID >= 0;
+		return docID >>> 3;
+	}
 
   /** Word-based builder. */
-  static class WordBuilder {
+	static class WordBuilder {
 
     final GrowableByteArrayDataOutput out;
-    final GrowableByteArrayDataOutput dirtyWords;
-    int clean;
+		final GrowableByteArrayDataOutput dirtyWords;
+		int clean;
     int lastWordNum;
     int numSequences;
     int indexInterval;
     int cardinality;
-    boolean reverse;
+		boolean reverse;
 
-    WordBuilder() {
-      out = new GrowableByteArrayDataOutput(1024);
-      dirtyWords = new GrowableByteArrayDataOutput(128);
-      clean = 0;
+		WordBuilder() {
+			out = new GrowableByteArrayDataOutput(1024);
+			dirtyWords = new GrowableByteArrayDataOutput(128);
+			clean = 0;
       lastWordNum = -1;
       numSequences = 0;
-      indexInterval = DEFAULT_INDEX_INTERVAL;
+			indexInterval = DEFAULT_INDEX_INTERVAL;
       cardinality = 0;
     }
 
@@ -255,28 +255,28 @@ public final class WAH8DocIdSet extends DocIdSet implements Accountable {
       return this;
     }
 
-    void writeHeader(boolean reverse, int cleanLength, int dirtyLength) throws IOException {
-      final int cleanLengthMinus2 = cleanLength - 2;
+		void writeHeader(boolean reverse, int cleanLength, int dirtyLength) throws IOException {
+			final int cleanLengthMinus2 = cleanLength - 2;
       assert cleanLengthMinus2 >= 0;
       assert dirtyLength >= 0;
-      int token = ((cleanLengthMinus2 & 0x03) << 4) | (dirtyLength & 0x07);
-      if (reverse) {
-        token |= 1 << 7;
-      }
-      if (cleanLengthMinus2 > 0x03) {
-        token |= 1 << 6;
-      }
-      if (dirtyLength > 0x07) {
-        token |= 1 << 3;
-      }
-      out.writeByte((byte) token);
-      if (cleanLengthMinus2 > 0x03) {
-        out.writeVInt(cleanLengthMinus2 >>> 2);
-      }
-      if (dirtyLength > 0x07) {
-        out.writeVInt(dirtyLength >>> 3);
-      }
-    }
+			int token = ((cleanLengthMinus2 & 0x03) << 4) | (dirtyLength & 0x07);
+			if (reverse) {
+				token |= 1 << 7;
+			}
+			if (cleanLengthMinus2 > 0x03) {
+				token |= 1 << 6;
+			}
+			if (dirtyLength > 0x07) {
+				token |= 1 << 3;
+			}
+			out.writeByte((byte) token);
+			if (cleanLengthMinus2 > 0x03) {
+				out.writeVInt(cleanLengthMinus2 >>> 2);
+			}
+			if (dirtyLength > 0x07) {
+				out.writeVInt(dirtyLength >>> 3);
+			}
+    	}
 
     private boolean sequenceIsConsistent() {
       for (int i = 1; i < dirtyWords.length; ++i) {
@@ -286,51 +286,51 @@ public final class WAH8DocIdSet extends DocIdSet implements Accountable {
       return true;
     }
 
-    void writeSequence() {
-      assert sequenceIsConsistent();
-      try {
-        writeHeader(reverse, clean, dirtyWords.length);
-      } catch (IOException cannotHappen) {
-        throw new AssertionError(cannotHappen);
-      }
-      out.writeBytes(dirtyWords.bytes, 0, dirtyWords.length);
-      dirtyWords.length = 0;
-      ++numSequences;
-    }
+		void writeSequence() {
+			assert sequenceIsConsistent();
+			try {
+				writeHeader(reverse, clean, dirtyWords.length);
+			} catch (IOException cannotHappen) {
+				throw new AssertionError(cannotHappen);
+			}
+			out.writeBytes(dirtyWords.bytes, 0, dirtyWords.length);
+			dirtyWords.length = 0;
+			++numSequences;
+		}
 
-    void addWord(int wordNum, byte word) {
+		void addWord(int wordNum, byte word) {
       assert wordNum > lastWordNum;
       assert word != 0;
 
-      if (!reverse) {
-        if (lastWordNum == -1) {
-          clean = 2 + wordNum; // special case for the 1st sequence
-          dirtyWords.writeByte(word);
-        } else {
-          switch (wordNum - lastWordNum) {
-            case 1:
-              if (word == (byte) 0xFF && dirtyWords.bytes[dirtyWords.length-1] == (byte) 0xFF) {
-                --dirtyWords.length;
-                writeSequence();
-                reverse = true;
-                clean = 2;
-              } else {
-                dirtyWords.writeByte(word);
-              }
-              break;
-            case 2:
-              dirtyWords.writeByte((byte) 0);
-              dirtyWords.writeByte(word);
-              break;
-            default:
-              writeSequence();
-              clean = wordNum - lastWordNum - 1;
-              dirtyWords.writeByte(word);
-          }
-        }
+			if (!reverse) {
+				if (lastWordNum == -1) {
+					clean = 2 + wordNum; // special case for the 1st sequence
+					dirtyWords.writeByte(word);
+				} else {
+					switch (wordNum - lastWordNum) {
+					case 1:
+						if (word == (byte) 0xFF && dirtyWords.bytes[dirtyWords.length-1] == (byte) 0xFF) {
+							--dirtyWords.length;
+							writeSequence();
+							reverse = true;
+							clean = 2;
+						} else {
+							dirtyWords.writeByte(word);
+						}
+						break;
+					case 2:
+						dirtyWords.writeByte((byte) 0);
+						dirtyWords.writeByte(word);
+						break;
+					default:
+						writeSequence();
+						clean = wordNum - lastWordNum - 1;
+						dirtyWords.writeByte(word);
+					}
+				}
       } else {
         assert lastWordNum >= 0;
-        switch (wordNum - lastWordNum) {
+        	switch (wordNum - lastWordNum) {
           case 1:
             if (word == (byte) 0xFF) {
               if (dirtyWords.length == 0) {
@@ -357,17 +357,17 @@ public final class WAH8DocIdSet extends DocIdSet implements Accountable {
             dirtyWords.writeByte(word);
         }
       }
-      lastWordNum = wordNum;
+			lastWordNum = wordNum;
       cardinality += BitUtil.bitCount(word);
-    }
+		}
 
     /** Build a new {@link WAH8DocIdSet}. */
-    public WAH8DocIdSet build() {
+		public WAH8DocIdSet build() {
       if (cardinality == 0) {
         assert lastWordNum == -1;
         return EMPTY;
       }
-      writeSequence();
+			writeSequence();
       final byte[] data = Arrays.copyOf(out.bytes, out.length);
 
       // Now build the index
@@ -380,86 +380,85 @@ public final class WAH8DocIdSet extends DocIdSet implements Accountable {
         final PackedLongValues.Builder positions = PackedLongValues.monotonicBuilder(pageSize, PackedInts.COMPACT);
         final PackedLongValues.Builder wordNums = PackedLongValues.monotonicBuilder(pageSize, PackedInts.COMPACT);
 
-        positions.add(0L);
-        wordNums.add(0L);
-        final Iterator it = new Iterator(data, cardinality, Integer.MAX_VALUE, SINGLE_ZERO, SINGLE_ZERO);
+				positions.add(0L);
+				wordNums.add(0L);
+				final Iterator it = new Iterator(data, cardinality, Integer.MAX_VALUE, SINGLE_ZERO, SINGLE_ZERO);
         assert it.in.getPosition() == 0;
         assert it.wordNum == -1;
-        for (int i = 1; i < valueCount; ++i) {
-          // skip indexInterval sequences
-          for (int j = 0; j < indexInterval; ++j) {
-            final boolean readSequence = it.readSequence();
-            assert readSequence;
-            it.skipDirtyBytes();
-          }
-          final int position = it.in.getPosition();
-          final int wordNum = it.wordNum;
-          positions.add(position);
-          wordNums.add(wordNum + 1);
-        }
-        indexPositions = positions.build();
-        indexWordNums = wordNums.build();
-      }
+				for (int i = 1; i < valueCount; ++i) {
+					// skip indexInterval sequences
+					for (int j = 0; j < indexInterval; ++j) {
+						final boolean readSequence = it.readSequence();
+						assert readSequence;
+						it.skipDirtyBytes();
+					}
+					final int position = it.in.getPosition();
+					final int wordNum = it.wordNum;
+					positions.add(position);
+					wordNums.add(wordNum + 1);
+				}
+				indexPositions = positions.build();
+				indexWordNums = wordNums.build();
+			}
 
-      return new WAH8DocIdSet(data, cardinality, indexInterval, indexPositions, indexWordNums);
-    }
-
-  }
+			return new WAH8DocIdSet(data, cardinality, indexInterval, indexPositions, indexWordNums);
+    	}
+	}
 
   /** A builder for {@link WAH8DocIdSet}s. */
-  public static final class Builder extends WordBuilder {
+	public static final class Builder extends WordBuilder {
 
     private int lastDocID;
-    private int wordNum, word;
+		private int wordNum, word;
 
     /** Sole constructor */
-    public Builder() {
-      super();
-      lastDocID = -1;
-      wordNum = -1;
-      word = 0;
-    }
+		public Builder() {
+			super();
+			lastDocID = -1;
+			wordNum = -1;
+			word = 0;
+		}
 
-    /** Add a document to this builder. Documents must be added in order. */
-    public Builder add(int docID) {
-      if (docID <= lastDocID) {
-        throw new IllegalArgumentException("Doc ids must be added in-order, got " + docID + " which is <= lastDocID=" + lastDocID);
-      }
-      final int wordNum = wordNum(docID);
-      if (this.wordNum == -1) {
-        this.wordNum = wordNum;
-        word = 1 << (docID & 0x07);
-      } else if (wordNum == this.wordNum) {
-        word |= 1 << (docID & 0x07);
-      } else {
-        addWord(this.wordNum, (byte) word);
-        this.wordNum = wordNum;
-        word = 1 << (docID & 0x07);
-      }
-      lastDocID = docID;
-      return this;
-    }
+		/** Add a document to this builder. Documents must be added in order. */
+		public Builder add(int docID) {
+			if (docID <= lastDocID) {
+				throw new IllegalArgumentException("Doc ids must be added in-order, got " + docID + " which is <= lastDocID=" + lastDocID);
+			}
+			final int wordNum = wordNum(docID);
+			if (this.wordNum == -1) {
+				this.wordNum = wordNum;
+				word = 1 << (docID & 0x07);
+			} else if (wordNum == this.wordNum) {
+				word |= 1 << (docID & 0x07);
+			} else {
+				addWord(this.wordNum, (byte) word);
+				this.wordNum = wordNum;
+				word = 1 << (docID & 0x07);
+			}
+			lastDocID = docID;
+			return this;
+		}
 
-    /** Add the content of the provided {@link DocIdSetIterator}. */
-    public Builder add(DocIdSetIterator disi) throws IOException {
-      for (int doc = disi.nextDoc(); doc != DocIdSetIterator.NO_MORE_DOCS; doc = disi.nextDoc()) {
-        add(doc);
-      }
-      return this;
-    }
+		/** Add the content of the provided {@link DocIdSetIterator}. */
+		public Builder add(DocIdSetIterator disi) throws IOException {
+			for (int doc = disi.nextDoc(); doc != DocIdSetIterator.NO_MORE_DOCS; doc = disi.nextDoc()) {
+				add(doc);
+			}
+			return this;
+		}
 
     @Override
     public Builder setIndexInterval(int indexInterval) {
       return (Builder) super.setIndexInterval(indexInterval);
     }
 
-    @Override
-    public WAH8DocIdSet build() {
-      if (this.wordNum != -1) {
-        addWord(wordNum, (byte) word);
-      }
-      return super.build();
-    }
+		@Override
+		public WAH8DocIdSet build() {
+			if (this.wordNum != -1) {
+				addWord(wordNum, (byte) word);
+			}
+			return super.build();
+		}
 
   }
 
@@ -470,13 +469,13 @@ public final class WAH8DocIdSet extends DocIdSet implements Accountable {
   // index for advance(int)
   private final PackedLongValues positions, wordNums; // wordNums[i] starts at the sequence at positions[i]
 
-  WAH8DocIdSet(byte[] data, int cardinality, int indexInterval, PackedLongValues positions, PackedLongValues wordNums) {
-    this.data = data;
-    this.cardinality = cardinality;
-    this.indexInterval = indexInterval;
-    this.positions = positions;
-    this.wordNums = wordNums;
-  }
+	WAH8DocIdSet(byte[] data, int cardinality, int indexInterval, PackedLongValues positions, PackedLongValues wordNums) {
+		this.data = data;
+		this.cardinality = cardinality;
+		this.indexInterval = indexInterval;
+		this.positions = positions;
+		this.wordNums = wordNums;
+	}
 
   @Override
   public boolean isCacheable() {
@@ -488,17 +487,17 @@ public final class WAH8DocIdSet extends DocIdSet implements Accountable {
     return new Iterator(data, cardinality, indexInterval, positions, wordNums);
   }
 
-  static int readCleanLength(ByteArrayDataInput in, int token) {
-    int len = (token >>> 4) & 0x07;
-    final int startPosition = in.getPosition();
-    if ((len & 0x04) != 0) {
-      len = (len & 0x03) | (in.readVInt() << 2);
-    }
-    if (startPosition != 1) {
-      len += 2;
-    }
-    return len;
-  }
+	static int readCleanLength(ByteArrayDataInput in, int token) {
+		int len = (token >>> 4) & 0x07;
+		final int startPosition = in.getPosition();
+		if ((len & 0x04) != 0) {
+			len = (len & 0x03) | (in.readVInt() << 2);
+		}
+		if (startPosition != 1) {
+			len += 2;
+		}
+		return len;
+	}
 
   static int readDirtyLength(ByteArrayDataInput in, int token) {
     int len = token & 0x0F;
@@ -508,7 +507,7 @@ public final class WAH8DocIdSet extends DocIdSet implements Accountable {
     return len;
   }
 
-  static class Iterator extends DocIdSetIterator {
+	static class Iterator extends DocIdSetIterator {
 
     /* Using the index can be costly for close targets. */
     static int indexThreshold(int cardinality, int indexInterval) {
@@ -548,23 +547,23 @@ public final class WAH8DocIdSet extends DocIdSet implements Accountable {
       indexThreshold = indexThreshold(cardinality, indexInterval);
     }
 
-    boolean readSequence() {
-      if (in.eof()) {
-        wordNum = Integer.MAX_VALUE;
-        return false;
-      }
-      final int token = in.readByte() & 0xFF;
-      if ((token & (1 << 7)) == 0) {
-        final int cleanLength = readCleanLength(in, token);
-        wordNum += cleanLength;
-      } else {
-        allOnesLength = readCleanLength(in, token);
-      }
-      dirtyLength = readDirtyLength(in, token);
+		boolean readSequence() {
+			if (in.eof()) {
+				wordNum = Integer.MAX_VALUE;
+				return false;
+			}
+			final int token = in.readByte() & 0xFF;
+			if ((token & (1 << 7)) == 0) {
+				final int cleanLength = readCleanLength(in, token);
+				wordNum += cleanLength;
+			} else {
+				allOnesLength = readCleanLength(in, token);
+			}
+			dirtyLength = readDirtyLength(in, token);
       assert in.length() - in.getPosition() >= dirtyLength : in.getPosition() + " " + in.length() + " " + dirtyLength;
-      ++sequenceNum;
-      return true;
-    }
+			++sequenceNum;
+			return true;
+		}
 
     void skipDirtyBytes(int count) {
       assert count >= 0;
@@ -726,9 +725,9 @@ public final class WAH8DocIdSet extends DocIdSet implements Accountable {
   }
 
   /** Return the number of documents in this {@link DocIdSet} in constant time. */
-  public int cardinality() {
-    return cardinality;
-  }
+	public int cardinality() {
+		return cardinality;
+	}
 
   @Override
   public long ramBytesUsed() {

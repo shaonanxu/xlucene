@@ -31,10 +31,10 @@ public final class GrowableByteArrayDataOutput extends DataOutput {
   public int length;
 
   /** Create a {@link GrowableByteArrayDataOutput} with the given initial capacity. */
-  public GrowableByteArrayDataOutput(int cp) {
-    this.bytes = new byte[ArrayUtil.oversize(cp, 1)];
-    this.length = 0;
-  }
+	public GrowableByteArrayDataOutput(int cp) {
+		this.bytes = new byte[ArrayUtil.oversize(cp, 1)];
+		this.length = 0;
+	}
 
   @Override
   public void writeByte(byte b) {

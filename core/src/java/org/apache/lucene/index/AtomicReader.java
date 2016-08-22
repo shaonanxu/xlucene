@@ -149,10 +149,9 @@ public abstract class AtomicReader extends IndexReader {
 
   /**
    * Returns {@link Fields} for this reader.
-   * This method may return null if the reader has no
-   * postings.
+   * This method may return null if the reader has no postings.
    */
-  public abstract Fields fields() throws IOException;
+	public abstract Fields fields() throws IOException;
 
   @Override
   public final int docFreq(Term term) throws IOException {

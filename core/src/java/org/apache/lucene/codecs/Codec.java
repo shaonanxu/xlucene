@@ -63,7 +63,7 @@ public abstract class Codec implements NamedSPILoader.NamedSPI {
   }
   
   /** Encodes/decodes postings */
-  public abstract PostingsFormat postingsFormat();
+	public abstract PostingsFormat postingsFormat();
 
   /** Encodes/decodes docvalues */
   public abstract DocValuesFormat docValuesFormat();

@@ -73,9 +73,9 @@ public abstract class Outputs<T> {
   /** Decode an output value previously written with {@link
    *  #writeFinalOutput(Object, DataOutput)}.  By default this
    *  just calls {@link #read(DataInput)}. */
-  public T readFinalOutput(DataInput in) throws IOException {
-    return read(in);
-  }
+	public T readFinalOutput(DataInput in) throws IOException {
+		return read(in);
+	}
   
   /** Skip the output previously written with {@link #writeFinalOutput};
    *  defaults to just calling {@link #readFinalOutput} and discarding

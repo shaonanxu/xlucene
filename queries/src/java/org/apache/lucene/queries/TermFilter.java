@@ -55,25 +55,24 @@ final public class TermFilter extends Filter {
     return term;
   }
 
-  @Override
-  public DocIdSet getDocIdSet(AtomicReaderContext context, final Bits acceptDocs) throws IOException {
-    Terms terms = context.reader().terms(term.field());
-    if (terms == null) {
-      return null;
-    }
+	@Override
+	public DocIdSet getDocIdSet(AtomicReaderContext context, final Bits acceptDocs) throws IOException {
+		Terms terms = context.reader().terms(term.field());
+		if (terms == null) {
+			return null;
+		}
 
-    final TermsEnum termsEnum = terms.iterator(null);
-    if (!termsEnum.seekExact(term.bytes())) {
-      return null;
-    }
-    return new DocIdSet() {
-      @Override
-      public DocIdSetIterator iterator() throws IOException {
-        return termsEnum.docs(acceptDocs, null, DocsEnum.FLAG_NONE);
-      }
-
-    };
-  }
+		final TermsEnum termsEnum = terms.iterator(null);
+		if (!termsEnum.seekExact(term.bytes())) {
+			return null;
+		}
+		return new DocIdSet() {
+			@Override
+			public DocIdSetIterator iterator() throws IOException {
+				return termsEnum.docs(acceptDocs, null, DocsEnum.FLAG_NONE);
+			}
+		};
+	}
 
   @Override
   public boolean equals(Object o) {
