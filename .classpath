@@ -27,7 +27,11 @@
 	<classpathentry kind="src" path="suggest/src/test"/>
 	<classpathentry kind="src" path="classification/src/test"/>
 	<classpathentry kind="src" path="memory/src/test"/>
+	<classpathentry kind="src" path="x"/>
+	<classpathentry kind="src" path="analysis/smartcn/src/java"/>
+	<classpathentry kind="src" path="analysis/common/src/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="/Users/xushaonan/.m2/repository/com/spatial4j/spatial4j/0.4.1/spatial4j-0.4.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

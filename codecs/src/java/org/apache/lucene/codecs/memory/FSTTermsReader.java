@@ -68,7 +68,7 @@ import org.apache.lucene.util.fst.Util;
  */
 
 public class FSTTermsReader extends FieldsProducer {
-  final TreeMap<String, TermsReader> fields = new TreeMap<>();
+	final TreeMap<String, TermsReader> fields = new TreeMap<>();
   final PostingsReaderBase postingsReader;
   //static boolean TEST = false;
   final int version;

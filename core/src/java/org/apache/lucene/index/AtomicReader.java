@@ -234,21 +234,21 @@ public abstract class AtomicReader extends IndexReader {
    *  This will return null if either the field or
    *  term does not exist.
    *  @see TermsEnum#docs(Bits, DocsEnum) */
-  public final DocsEnum termDocsEnum(Term term) throws IOException {
-    assert term.field() != null;
-    assert term.bytes() != null;
-    final Fields fields = fields();
-    if (fields != null) {
-      final Terms terms = fields.terms(term.field());
-      if (terms != null) {
-        final TermsEnum termsEnum = terms.iterator(null);
-        if (termsEnum.seekExact(term.bytes())) {
-          return termsEnum.docs(getLiveDocs(), null);
-        }
-      }
-    }
-    return null;
-  }
+	public final DocsEnum termDocsEnum(Term term) throws IOException {
+		assert term.field() != null;
+		assert term.bytes() != null;
+		final Fields fields = fields();
+		if (fields != null) {
+			final Terms terms = fields.terms(term.field());
+			if (terms != null) {
+				final TermsEnum termsEnum = terms.iterator(null);
+				if (termsEnum.seekExact(term.bytes())) {
+					return termsEnum.docs(getLiveDocs(), null);
+				}
+			}
+		}
+		return null;
+	}
 
   /** Returns {@link DocsAndPositionsEnum} for the specified
    *  term.  This will return null if the

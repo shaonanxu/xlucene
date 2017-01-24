@@ -30,8 +30,7 @@ import org.apache.lucene.store.IOContext;
 public abstract class StoredFieldsFormat {
   /** Sole constructor. (For invocation by subclass 
    *  constructors, typically implicit.) */
-  protected StoredFieldsFormat() {
-  }
+	protected StoredFieldsFormat() {}
 
   /** Returns a {@link StoredFieldsReader} to load stored
    *  fields. */

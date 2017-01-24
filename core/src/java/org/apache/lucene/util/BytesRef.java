@@ -51,18 +51,18 @@ public final class BytesRef implements Comparable<BytesRef>,Cloneable {
   /** This instance will directly reference bytes w/o making a copy.
    * bytes should not be null.
    */
-  public BytesRef(byte[] bytes, int offset, int length) {
-    this.bytes = bytes;
-    this.offset = offset;
-    this.length = length;
-    assert isValid();
-  }
+	public BytesRef(byte[] bytes, int offset, int length) {
+		this.bytes = bytes;
+		this.offset = offset;
+		this.length = length;
+		assert isValid();
+	}
 
   /** This instance will directly reference bytes w/o making a copy.
    * bytes should not be null */
-  public BytesRef(byte[] bytes) {
-    this(bytes, 0, bytes.length);
-  }
+	public BytesRef(byte[] bytes) {
+		this(bytes, 0, bytes.length);
+	}
 
   /** 
    * Create a BytesRef pointing to a new array of size <code>capacity</code>.

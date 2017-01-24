@@ -163,7 +163,7 @@ public class FieldInfos implements Iterable<FieldInfo> {
     return byNumber.get(fieldNumber);
   }
   
-  static final class FieldNumbers {
+	static final class FieldNumbers {
     
     private final Map<Integer,String> numberToName;
     private final Map<String,Integer> nameToNumber;

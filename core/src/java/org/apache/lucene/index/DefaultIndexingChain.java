@@ -348,7 +348,7 @@ final class DefaultIndexingChain extends DocConsumer {
 			}
       
 			fp = getOrAddField(fieldName, fieldType, true);
-      boolean first = fp.fieldGen != fieldGen;
+			boolean first = fp.fieldGen != fieldGen;
 			fp.invert(field, first);
 
 			if (first) {
@@ -439,35 +439,35 @@ final class DefaultIndexingChain extends DocConsumer {
 			((SortedDocValuesWriter) fp.docValuesWriter).addValue(docID, field.binaryValue());
 			break;
         
-      case SORTED_NUMERIC:
-        if (fp.docValuesWriter == null) {
-          fp.docValuesWriter = new SortedNumericDocValuesWriter(fp.fieldInfo, bytesUsed);
-        }
-        ((SortedNumericDocValuesWriter) fp.docValuesWriter).addValue(docID, field.numericValue().longValue());
-        break;
+		case SORTED_NUMERIC:
+			if (fp.docValuesWriter == null) {
+				fp.docValuesWriter = new SortedNumericDocValuesWriter(fp.fieldInfo, bytesUsed);
+			}
+			((SortedNumericDocValuesWriter) fp.docValuesWriter).addValue(docID, field.numericValue().longValue());
+			break;
 
-      case SORTED_SET:
-        if (fp.docValuesWriter == null) {
-          fp.docValuesWriter = new SortedSetDocValuesWriter(fp.fieldInfo, bytesUsed);
-        }
-        ((SortedSetDocValuesWriter) fp.docValuesWriter).addValue(docID, field.binaryValue());
-        break;
+		case SORTED_SET:
+			if (fp.docValuesWriter == null) {
+				fp.docValuesWriter = new SortedSetDocValuesWriter(fp.fieldInfo, bytesUsed);
+			}
+			((SortedSetDocValuesWriter) fp.docValuesWriter).addValue(docID, field.binaryValue());
+			break;
 
-      default:
-        throw new AssertionError("unrecognized DocValues.Type: " + dvType);
-    }
-  }
+		default:
+			throw new AssertionError("unrecognized DocValues.Type: " + dvType);
+		}
+	}
 
   /** Returns a previously created {@link PerField}, or null
    *  if this field name wasn't seen yet. */
-  private PerField getPerField(String name) {
-    final int hashPos = name.hashCode() & hashMask;
-    PerField fp = fieldHash[hashPos];
-    while (fp != null && !fp.fieldInfo.name.equals(name)) {
-      fp = fp.next;
-    }
-    return fp;
-  }
+	private PerField getPerField(String name) {
+		final int hashPos = name.hashCode() & hashMask;
+		PerField fp = fieldHash[hashPos];
+		while (fp != null && !fp.fieldInfo.name.equals(name)) {
+			fp = fp.next;
+		}
+		return fp;
+	}
 
   /** Returns a previously created {@link PerField},
    *  absorbing the type information from {@link FieldType},
@@ -522,7 +522,7 @@ final class DefaultIndexingChain extends DocConsumer {
 		TermsHashPerField termsHashPerField;
 
     // Non-null if this field ever had doc values in this segment:
-    DocValuesWriter docValuesWriter;
+		DocValuesWriter docValuesWriter;
 
     /** We use this to know when a PerField is seen for the
      *  first time in the current document. */
@@ -535,7 +535,7 @@ final class DefaultIndexingChain extends DocConsumer {
     NumericDocValuesWriter norms;
     
     // reused
-    TokenStream tokenStream;
+		TokenStream tokenStream;
 
 		public PerField(FieldInfo fieldInfo, boolean invert) {
 			this.fieldInfo = fieldInfo;
@@ -639,12 +639,8 @@ final class DefaultIndexingChain extends DocConsumer {
 
           //System.out.println("  term=" + invertState.termAttribute);
 
-          // If we hit an exception in here, we abort
-          // all buffered documents since the last
-          // flush, on the likelihood that the
-          // internal state of the terms hash is now
-          // corrupt and should not be flushed to a
-          // new segment:
+          // If we hit an exception in here, we abort all buffered documents since the last flush, 
+          // on the likelihood that the internal state of the terms hash is now corrupt and should not be flushed to a new segment:
 					aborting = true;
 					termsHashPerField.add();
 					aborting = false;
@@ -657,36 +653,36 @@ final class DefaultIndexingChain extends DocConsumer {
 
         // TODO: maybe add some safety? then again, its already checked 
         // when we come back around to the field...
-        invertState.position += invertState.posIncrAttribute.getPositionIncrement();
-        invertState.offset += invertState.offsetAttribute.endOffset();
+				invertState.position += invertState.posIncrAttribute.getPositionIncrement();
+				invertState.offset += invertState.offsetAttribute.endOffset();
 
         /* if there is an exception coming through, we won't set this to true here:*/
         succeededInProcessingField = true;
-      } catch (MaxBytesLengthExceededException e) {
-        aborting = false;
-        byte[] prefix = new byte[30];
-        BytesRef bigTerm = invertState.termAttribute.getBytesRef();
-        System.arraycopy(bigTerm.bytes, bigTerm.offset, prefix, 0, 30);
-        String msg = "Document contains at least one immense term in field=\"" + fieldInfo.name + "\" (whose UTF8 encoding is longer than the max length " + DocumentsWriterPerThread.MAX_TERM_LENGTH_UTF8 + "), all of which were skipped.  Please correct the analyzer to not produce such terms.  The prefix of the first immense term is: '" + Arrays.toString(prefix) + "...', original message: " + e.getMessage();
-        if (docState.infoStream.isEnabled("IW")) {
-          docState.infoStream.message("IW", "ERROR: " + msg);
-        }
+			} catch (MaxBytesLengthExceededException e) {
+				aborting = false;
+				byte[] prefix = new byte[30];
+				BytesRef bigTerm = invertState.termAttribute.getBytesRef();
+				System.arraycopy(bigTerm.bytes, bigTerm.offset, prefix, 0, 30);
+				String msg = "Document contains at least one immense term in field=\"" + fieldInfo.name + "\" (whose UTF8 encoding is longer than the max length " + DocumentsWriterPerThread.MAX_TERM_LENGTH_UTF8 + "), all of which were skipped.  Please correct the analyzer to not produce such terms.  The prefix of the first immense term is: '" + Arrays.toString(prefix) + "...', original message: " + e.getMessage();
+				if (docState.infoStream.isEnabled("IW")) {
+					docState.infoStream.message("IW", "ERROR: " + msg);
+				}
         // Document will be deleted above:
-        throw new IllegalArgumentException(msg, e);
-      } finally {
-        if (succeededInProcessingField == false && aborting) {
-          docState.docWriter.setAborting();
-        }
+				throw new IllegalArgumentException(msg, e);
+			} finally {
+				if (succeededInProcessingField == false && aborting) {
+					docState.docWriter.setAborting();
+				}
 
-        if (!succeededInProcessingField && docState.infoStream.isEnabled("DW")) {
-          docState.infoStream.message("DW", "An exception was thrown while processing field " + fieldInfo.name);
-        }
+				if (!succeededInProcessingField && docState.infoStream.isEnabled("DW")) {
+					docState.infoStream.message("DW", "An exception was thrown while processing field " + fieldInfo.name);
+				}
       }
 
-      if (analyzed) {
-        invertState.position += docState.analyzer.getPositionIncrementGap(fieldInfo.name);
-        invertState.offset += docState.analyzer.getOffsetGap(fieldInfo.name);
-      }
+			if (analyzed) {
+				invertState.position += docState.analyzer.getPositionIncrementGap(fieldInfo.name);
+				invertState.offset += docState.analyzer.getOffsetGap(fieldInfo.name);
+			}
 
       invertState.boost *= field.boost();
     }

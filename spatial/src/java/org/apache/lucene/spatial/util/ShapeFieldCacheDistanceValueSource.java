@@ -63,10 +63,10 @@ public class ShapeFieldCacheDistanceValueSource extends ValueSource {
 			private final DistanceCalculator calculator = ctx.getDistCalc();
 			private final double nullValue = (ctx.isGeo() ? 180 * multiplier : Double.MAX_VALUE);
 
-      @Override
-      public float floatVal(int doc) {
-        return (float) doubleVal(doc);
-      }
+			@Override
+			public float floatVal(int doc) {
+				return (float) doubleVal(doc);
+			}
 
 			@Override
 			public double doubleVal(int doc) {

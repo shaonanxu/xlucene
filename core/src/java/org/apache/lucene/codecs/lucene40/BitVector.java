@@ -199,7 +199,7 @@ final class BitVector implements Cloneable, MutableBits {
 
   // Changed DGaps to encode gaps between cleared bits, not
   // set:
-  public final static int VERSION_DGAPS_CLEARED = 1;
+	public final static int VERSION_DGAPS_CLEARED = 1;
   
   // added checksum
   public final static int VERSION_CHECKSUM = 2;
@@ -329,44 +329,45 @@ final class BitVector implements Cloneable, MutableBits {
   /** Constructs a bit vector from the file <code>name</code> in Directory
     <code>d</code>, as written by the {@link #write} method.
     */
-  public BitVector(Directory d, String name, IOContext context) throws IOException {
-    ChecksumIndexInput input = d.openChecksumInput(name, context);
+	public BitVector(Directory d, String name, IOContext context) throws IOException {
+		ChecksumIndexInput input = d.openChecksumInput(name, context);
 
-    try {
-      final int firstInt = input.readInt();
+		try {
+			final int firstInt = input.readInt();
 
-      if (firstInt == -2) {
+			if (firstInt == -2) {
         // New format, with full header & version:
-        version = CodecUtil.checkHeader(input, CODEC, VERSION_START, VERSION_CURRENT);
-        size = input.readInt();
-      } else {
-        version = VERSION_PRE;
-        size = firstInt;
-      }
-      if (size == -1) {
-        if (version >= VERSION_DGAPS_CLEARED) {
-          readClearedDgaps(input);
-        } else {
-          readSetDgaps(input);
-        }
-      } else {
-        readBits(input);
-      }
+				version = CodecUtil.checkHeader(input, CODEC, VERSION_START, VERSION_CURRENT);
+				size = input.readInt();
+			} else {
+				version = VERSION_PRE;
+				size = firstInt;
+			}
+			if (size == -1) {
+				if (version >= VERSION_DGAPS_CLEARED) {
+					readClearedDgaps(input);
+				} else {
+					readSetDgaps(input);
+				}
+			} else {
+				readBits(input);
+			}
 
-      if (version < VERSION_DGAPS_CLEARED) {
-        invertAll();
-      }
+			if (version < VERSION_DGAPS_CLEARED) {
+				invertAll();
+			}
 
-      if (version >= VERSION_CHECKSUM) {
-        CodecUtil.checkFooter(input);
-      } else if (version >= VERSION_DGAPS_CLEARED) {
-        CodecUtil.checkEOF(input);
-      } // otherwise, before this we cannot even check that we read the entire file due to bugs in those versions!!!!
-      assert verifyCount();
-    } finally {
-      input.close();
-    }
-  }
+			if (version >= VERSION_CHECKSUM) {
+				CodecUtil.checkFooter(input);
+			} else if (version >= VERSION_DGAPS_CLEARED) {
+				CodecUtil.checkEOF(input);
+			} // otherwise, before this we cannot even check that we read the
+				// entire file due to bugs in those versions!!!!
+			assert verifyCount();
+		} finally {
+			input.close();
+		}
+	}
 
   // asserts only
   private boolean verifyCount() {

@@ -342,14 +342,14 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
 	}
 
   /** Writes the terms file header. */
-  private void writeHeader(IndexOutput out) throws IOException {
-    CodecUtil.writeHeader(out, TERMS_CODEC_NAME, VERSION_CURRENT);   
-  }
+	private void writeHeader(IndexOutput out) throws IOException {
+		CodecUtil.writeHeader(out, TERMS_CODEC_NAME, VERSION_CURRENT);
+	}
 
   /** Writes the index file header. */
-  private void writeIndexHeader(IndexOutput out) throws IOException {
-    CodecUtil.writeHeader(out, TERMS_INDEX_CODEC_NAME, VERSION_CURRENT); 
-  }
+	private void writeIndexHeader(IndexOutput out) throws IOException {
+		CodecUtil.writeHeader(out, TERMS_INDEX_CODEC_NAME, VERSION_CURRENT);
+	}
 
   /** Writes the terms file trailer. */
   private void writeTrailer(IndexOutput out, long dirStart) throws IOException {

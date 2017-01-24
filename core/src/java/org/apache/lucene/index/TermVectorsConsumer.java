@@ -48,10 +48,10 @@ final class TermVectorsConsumer extends TermsHash {
   int lastDocID;
   private TermVectorsConsumerPerField[] perFields = new TermVectorsConsumerPerField[1];
 
-  public TermVectorsConsumer(DocumentsWriterPerThread docWriter) {
-    super(docWriter, false, null);
-    this.docWriter = docWriter;
-  }
+	public TermVectorsConsumer(DocumentsWriterPerThread docWriter) {
+		super(docWriter, false, null);
+		this.docWriter = docWriter;
+	}
 
   @Override
   void flush(Map<String, TermsHashPerField> fieldsToFlush, final SegmentWriteState state) throws IOException {
@@ -140,10 +140,10 @@ final class TermVectorsConsumer extends TermsHash {
     numVectorFields = 0;
   }
 
-  @Override
-  public TermsHashPerField addField(FieldInvertState invertState, FieldInfo fieldInfo) {
-    return new TermVectorsConsumerPerField(invertState, this, fieldInfo);
-  }
+	@Override
+	public TermsHashPerField addField(FieldInvertState invertState, FieldInfo fieldInfo) {
+		return new TermVectorsConsumerPerField(invertState, this, fieldInfo);
+	}
 
   void addFieldToFlush(TermVectorsConsumerPerField fieldToFlush) {
     if (numVectorFields == perFields.length) {

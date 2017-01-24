@@ -31,7 +31,7 @@ public class PackedTokenAttributeImpl extends CharTermAttributeImpl
                    implements TypeAttribute, PositionIncrementAttribute,
                               PositionLengthAttribute, OffsetAttribute {
 
-  private int startOffset,endOffset;
+	private int startOffset, endOffset;
   private String type = DEFAULT_TYPE;
   private int positionIncrement = 1;
   private int positionLength = 1;
@@ -101,15 +101,15 @@ public class PackedTokenAttributeImpl extends CharTermAttributeImpl
    * {@inheritDoc}
    * @see OffsetAttribute
    */
-  @Override
-  public void setOffset(int startOffset, int endOffset) {
-    if (startOffset < 0 || endOffset < startOffset) {
-      throw new IllegalArgumentException("startOffset must be non-negative, and endOffset must be >= startOffset, "
-          + "startOffset=" + startOffset + ",endOffset=" + endOffset);
-    }
-    this.startOffset = startOffset;
-    this.endOffset = endOffset;
-  }
+	@Override
+	public void setOffset(int startOffset, int endOffset) {
+		if (startOffset < 0 || endOffset < startOffset) {
+			throw new IllegalArgumentException("startOffset must be non-negative, and endOffset must be >= startOffset, "
+					+ "startOffset=" + startOffset + ",endOffset=" + endOffset);
+		}
+		this.startOffset = startOffset;
+		this.endOffset = endOffset;
+	}
 
   /**
    * {@inheritDoc}

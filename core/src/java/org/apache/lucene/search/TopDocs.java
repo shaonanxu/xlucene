@@ -216,7 +216,7 @@ public class TopDocs {
   public static TopDocs merge(Sort sort, int start, int size, TopDocs[] shardHits) throws IOException {
     final PriorityQueue<ShardRef> queue;
     if (sort == null) {
-      queue = new ScoreMergeSortQueue(shardHits);
+			queue = new ScoreMergeSortQueue(shardHits);
     } else {
       queue = new MergeSortQueue(sort, shardHits);
     }

@@ -1,4 +1,5 @@
 package org.apache.lucene.index;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with this
@@ -23,7 +24,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.lucene.index.DocumentsWriterPerThread.FlushedSegment;
 
-
 /**
  * @lucene.internal 
  */
@@ -34,21 +34,21 @@ class DocumentsWriterFlushQueue {
   private final AtomicInteger ticketCount = new AtomicInteger();
   private final ReentrantLock purgeLock = new ReentrantLock();
 
-  void addDeletes(DocumentsWriterDeleteQueue deleteQueue) throws IOException {
-    synchronized (this) {
-      incTickets();// first inc the ticket count - freeze opens
-                   // a window for #anyChanges to fail
-      boolean success = false;
-      try {
-        queue.add(new GlobalDeletesTicket(deleteQueue.freezeGlobalBuffer(null)));
-        success = true;
-      } finally {
-        if (!success) {
-          decTickets();
-        }
-      }
-    }
-  }
+	void addDeletes(DocumentsWriterDeleteQueue deleteQueue) throws IOException {
+		synchronized (this) {
+			incTickets();// first inc the ticket count - freeze opens
+							// a window for #anyChanges to fail
+			boolean success = false;
+			try {
+				queue.add(new GlobalDeletesTicket(deleteQueue.freezeGlobalBuffer(null)));
+				success = true;
+			} finally {
+				if (!success) {
+					decTickets();
+				}
+			}
+		}
+	}
   
   private void incTickets() {
     int numTickets = ticketCount.incrementAndGet();

@@ -40,10 +40,10 @@ final class TermVectorsConsumerPerField extends TermsHashPerField {
   PayloadAttribute payloadAttribute;
   boolean hasPayloads; // if enabled, and we actually saw any for this field
 
-  public TermVectorsConsumerPerField(FieldInvertState invertState, TermVectorsConsumer termsWriter, FieldInfo fieldInfo) {
-    super(2, invertState, termsWriter, null, fieldInfo);
-    this.termsWriter = termsWriter;
-  }
+	public TermVectorsConsumerPerField(FieldInvertState invertState, TermVectorsConsumer termsWriter, FieldInfo fieldInfo) {
+		super(2, invertState, termsWriter, null, fieldInfo);
+		this.termsWriter = termsWriter;
+	}
 
   /** Called once per field per document if term vectors
    *  are enabled, to write the vectors to

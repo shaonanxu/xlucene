@@ -75,14 +75,14 @@ public class LiveIndexWriterConfig {
   protected volatile Codec codec;
 
   /** {@link InfoStream} for debugging messages. */
-  protected volatile InfoStream infoStream;
+	protected volatile InfoStream infoStream;
 
   /** {@link MergePolicy} for selecting merges. */
   protected volatile MergePolicy mergePolicy;
 
   /** {@code DocumentsWriterPerThreadPool} to control how
    *  threads are allocated to {@code DocumentsWriterPerThread}. */
-  protected volatile DocumentsWriterPerThreadPool indexerThreadPool;
+	protected volatile DocumentsWriterPerThreadPool indexerThreadPool;
 
   /** True if readers should be pooled. */
   protected volatile boolean readerPooling;
@@ -117,7 +117,7 @@ public class LiveIndexWriterConfig {
     delPolicy = new KeepOnlyLastCommitDeletionPolicy();
     commit = null;
     useCompoundFile = IndexWriterConfig.DEFAULT_USE_COMPOUND_FILE_SYSTEM;
-    openMode = OpenMode.CREATE_OR_APPEND;
+		openMode = OpenMode.CREATE_OR_APPEND;
     similarity = IndexSearcher.getDefaultSimilarity();
     mergeScheduler = new ConcurrentMergeScheduler();
     writeLockTimeout = IndexWriterConfig.WRITE_LOCK_TIMEOUT;
@@ -126,11 +126,11 @@ public class LiveIndexWriterConfig {
 		if (codec == null) {
 			throw new NullPointerException();
 		}
-    infoStream = InfoStream.getDefault();
+		infoStream = InfoStream.getDefault();
     mergePolicy = new TieredMergePolicy();
 		flushPolicy = new FlushByRamOrCountsPolicy();
 		readerPooling = IndexWriterConfig.DEFAULT_READER_POOLING;
-    indexerThreadPool = new DocumentsWriterPerThreadPool(IndexWriterConfig.DEFAULT_MAX_THREAD_STATES);
+		indexerThreadPool = new DocumentsWriterPerThreadPool(IndexWriterConfig.DEFAULT_MAX_THREAD_STATES);
     perThreadHardLimitMB = IndexWriterConfig.DEFAULT_RAM_PER_THREAD_HARD_LIMIT_MB;
   }
   
@@ -415,9 +415,9 @@ public class LiveIndexWriterConfig {
   }
   
   /** Returns the {@link OpenMode} set by {@link IndexWriterConfig#setOpenMode(OpenMode)}. */
-  public OpenMode getOpenMode() {
-    return openMode;
-  }
+	public OpenMode getOpenMode() {
+		return openMode;
+	}
   
   /**
    * Returns the {@link IndexDeletionPolicy} specified in
@@ -482,9 +482,9 @@ public class LiveIndexWriterConfig {
    * @see IndexWriterConfig#setIndexerThreadPool(DocumentsWriterPerThreadPool)
    * @return the configured {@link DocumentsWriterPerThreadPool} instance.
    */
-  DocumentsWriterPerThreadPool getIndexerThreadPool() {
-    return indexerThreadPool;
-  }
+	DocumentsWriterPerThreadPool getIndexerThreadPool() {
+		return indexerThreadPool;
+	}
 
   /**
    * Returns the max number of simultaneous threads that may be indexing
@@ -531,9 +531,9 @@ public class LiveIndexWriterConfig {
    *
    * @see IndexWriterConfig#setInfoStream(InfoStream)
    */
-  public InfoStream getInfoStream() {
-    return infoStream;
-  }
+	public InfoStream getInfoStream() {
+		return infoStream;
+	}
   
   /**
    * Sets if the {@link IndexWriter} should pack newly written segments in a

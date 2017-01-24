@@ -83,11 +83,11 @@ public final class BytesRefHash {
     hashSize = capacity;
     hashHalfSize = hashSize >> 1;
     hashMask = hashSize - 1;
-    this.pool = pool;
+    	this.pool = pool;
     ids = new int[hashSize];
     Arrays.fill(ids, -1);
-    this.bytesStartArray = bytesStartArray;
-    bytesStart = bytesStartArray.init();
+    	this.bytesStartArray = bytesStartArray;
+		bytesStart = bytesStartArray.init();
     bytesUsed = bytesStartArray.bytesUsed() == null? Counter.newCounter() : bytesStartArray.bytesUsed();
     bytesUsed.addAndGet(hashSize * RamUsageEstimator.NUM_BYTES_INT);
   }
@@ -279,8 +279,7 @@ public final class BytesRefHash {
 			final int len2 = 2 + bytes.length;
 			if (len2 + pool.byteUpto > BYTE_BLOCK_SIZE) {
 				if (len2 > BYTE_BLOCK_SIZE) {
-					throw new MaxBytesLengthExceededException(
-							"bytes can be at most " + (BYTE_BLOCK_SIZE - 2) + " in length; got " + bytes.length);
+					throw new MaxBytesLengthExceededException("bytes can be at most " + (BYTE_BLOCK_SIZE - 2) + " in length; got " + bytes.length);
 				}
 				pool.nextBuffer();
 			}

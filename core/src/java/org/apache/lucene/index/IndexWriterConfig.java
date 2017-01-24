@@ -104,13 +104,13 @@ public final class IndexWriterConfig extends LiveIndexWriterConfig {
   public static final int DEFAULT_READER_TERMS_INDEX_DIVISOR = DirectoryReader.DEFAULT_TERMS_INDEX_DIVISOR;
 
   /** Default value is 1945. Change using {@link #setRAMPerThreadHardLimitMB(int)} */
-  public static final int DEFAULT_RAM_PER_THREAD_HARD_LIMIT_MB = 1945;
+	public static final int DEFAULT_RAM_PER_THREAD_HARD_LIMIT_MB = 1945;
   
   /** The maximum number of simultaneous threads that may be
    *  indexing documents at once in IndexWriter; if more
    *  than this many threads arrive they will wait for
    *  others to finish. Default value is 8. */
-  public final static int DEFAULT_MAX_THREAD_STATES = 8;
+	public final static int DEFAULT_MAX_THREAD_STATES = 8;
   
   /** Default value for compound file system for newly written segments
    *  (set to <code>true</code>). For batch indexing with very large 
@@ -341,10 +341,10 @@ public final class IndexWriterConfig extends LiveIndexWriterConfig {
    * {@link #DEFAULT_MAX_THREAD_STATES}.
    *
    * <p>Only takes effect when IndexWriter is first created. */
-  public IndexWriterConfig setMaxThreadStates(int maxThreadStates) {
-    this.indexerThreadPool = new DocumentsWriterPerThreadPool(maxThreadStates);
-    return this;
-  }
+	public IndexWriterConfig setMaxThreadStates(int maxThreadStates) {
+		this.indexerThreadPool = new DocumentsWriterPerThreadPool(maxThreadStates);
+		return this;
+	}
 
   @Override
   public int getMaxThreadStates() {

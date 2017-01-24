@@ -58,24 +58,24 @@ class DocumentsWriterPerThread {
 
 	static final IndexingChain defaultIndexingChain = new IndexingChain() {
 
-    @Override
-    DocConsumer getChain(DocumentsWriterPerThread documentsWriterPerThread) throws IOException {
-      return new DefaultIndexingChain(documentsWriterPerThread);
-    }
-  };
+		@Override
+		DocConsumer getChain(DocumentsWriterPerThread documentsWriterPerThread) throws IOException {
+			return new DefaultIndexingChain(documentsWriterPerThread);
+		}
+	};
 
-  static class DocState {
-    final DocumentsWriterPerThread docWriter;
+	static class DocState {
+		final DocumentsWriterPerThread docWriter;
     Analyzer analyzer;
     InfoStream infoStream;
     Similarity similarity;
     int docID;
     Iterable<? extends IndexableField> doc;
 
-    DocState(DocumentsWriterPerThread docWriter, InfoStream infoStream) {
-      this.docWriter = docWriter;
-      this.infoStream = infoStream;
-    }
+		DocState(DocumentsWriterPerThread docWriter, InfoStream infoStream) {
+			this.docWriter = docWriter;
+			this.infoStream = infoStream;
+		}
 
     public void testPoint(String name) {
       docWriter.testPoint(name);
@@ -135,7 +135,7 @@ class DocumentsWriterPerThread {
   final Codec codec;
   final TrackingDirectoryWrapper directory;
   final Directory directoryOrig;
-  final DocState docState;
+	final DocState docState;
 	final DocConsumer consumer;
   final Counter bytesUsed;
   
@@ -148,7 +148,7 @@ class DocumentsWriterPerThread {
 
   private final FieldInfos.Builder fieldInfos;
   private final InfoStream infoStream;
-  private int numDocsInRAM;
+	private int numDocsInRAM;
   final DocumentsWriterDeleteQueue deleteQueue;
   private final DeleteSlice deleteSlice;
   private final NumberFormat nf = NumberFormat.getInstance(Locale.ROOT);
@@ -157,7 +157,7 @@ class DocumentsWriterPerThread {
   private final AtomicLong pendingNumDocs;
   private final LiveIndexWriterConfig indexWriterConfig;
   
-  public DocumentsWriterPerThread(String segmentName, Directory directory, LiveIndexWriterConfig indexWriterConfig, InfoStream infoStream, DocumentsWriterDeleteQueue deleteQueue,
+	public DocumentsWriterPerThread(String segmentName, Directory directory, LiveIndexWriterConfig indexWriterConfig, InfoStream infoStream, DocumentsWriterDeleteQueue deleteQueue,
                                   FieldInfos.Builder fieldInfos, AtomicLong pendingNumDocs) throws IOException {
     this.directoryOrig = directory;
     this.directory = new TrackingDirectoryWrapper(directory);
@@ -185,7 +185,7 @@ class DocumentsWriterPerThread {
     // this should be the last call in the ctor 
     // it really sucks that we need to pull this within the ctor and pass this ref to the chain!
 		consumer = indexWriterConfig.getIndexingChain().getChain(this);
-  }
+	}
   
   void setAborting() {
     aborting = true;
@@ -207,15 +207,14 @@ class DocumentsWriterPerThread {
     }
   }
 
-  /** Anything that will add N docs to the index should reserve first to
-   *  make sure it's allowed. */
-  private void reserveDoc() {
-    if (pendingNumDocs.incrementAndGet() > IndexWriter.getActualMaxDocs()) {
-      // Reserve failed
-      pendingNumDocs.decrementAndGet();
-      throw new IllegalStateException("number of documents in the index cannot exceed " + IndexWriter.getActualMaxDocs());
-    }
-  }
+  /** Anything that will add N docs to the index should reserve first to make sure it's allowed. */
+	private void reserveDoc() {
+		if (pendingNumDocs.incrementAndGet() > IndexWriter.getActualMaxDocs()) {
+			// Reserve failed
+			pendingNumDocs.decrementAndGet();
+			throw new IllegalStateException("number of documents in the index cannot exceed " + IndexWriter.getActualMaxDocs());
+		}
+	}
 
   public void updateDocument(Iterable<? extends IndexableField> doc, Analyzer analyzer, Term delTerm) throws IOException {
     testPoint("DocumentsWriterPerThread addDocument start");
@@ -223,9 +222,9 @@ class DocumentsWriterPerThread {
 		docState.doc = doc;
 		docState.analyzer = analyzer;
     docState.docID = numDocsInRAM;
-    if (INFO_VERBOSE && infoStream.isEnabled("DWPT")) {
-      infoStream.message("DWPT", Thread.currentThread().getName() + " update delTerm=" + delTerm + " docID=" + docState.docID + " seg=" + segmentInfo.name);
-    }
+		if (INFO_VERBOSE && infoStream.isEnabled("DWPT")) {
+			infoStream.message("DWPT", Thread.currentThread().getName() + " update delTerm=" + delTerm + " docID=" + docState.docID + " seg=" + segmentInfo.name);
+		}
     // Even on exception, the document is still added (but marked
     // deleted), so we don't need to un-reserve at that point.
     // Aborting exceptions will actually "lose" more than one
@@ -258,7 +257,7 @@ class DocumentsWriterPerThread {
 	public int updateDocuments(Iterable<? extends Iterable<? extends IndexableField>> docs, Analyzer analyzer, Term delTerm) throws IOException {
 		testPoint("DocumentsWriterPerThread addDocuments start");
     assert deleteQueue != null;
-    	docState.analyzer = analyzer;
+		docState.analyzer = analyzer;
     	if (INFO_VERBOSE && infoStream.isEnabled("DWPT")) {
     		infoStream.message("DWPT", Thread.currentThread().getName() + " update delTerm=" + delTerm + " docID=" + docState.docID + " seg=" + segmentInfo.name);
     	}
@@ -372,10 +371,10 @@ class DocumentsWriterPerThread {
   /**
    * Returns the number of RAM resident documents in this {@link DocumentsWriterPerThread}
    */
-  public int getNumDocsInRAM() {
-    // public for FlushPolicy
-    return numDocsInRAM;
-  }
+	public int getNumDocsInRAM() {
+		// public for FlushPolicy
+		return numDocsInRAM;
+	}
 
   
   /**

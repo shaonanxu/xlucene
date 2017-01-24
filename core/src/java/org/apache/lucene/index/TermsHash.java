@@ -35,8 +35,8 @@ abstract class TermsHash {
 
 	final TermsHash nextTermsHash;
 
-  final IntBlockPool intPool;
-  final ByteBlockPool bytePool;
+	final IntBlockPool intPool;
+	final ByteBlockPool bytePool;
   ByteBlockPool termBytePool;
   final Counter bytesUsed;
 

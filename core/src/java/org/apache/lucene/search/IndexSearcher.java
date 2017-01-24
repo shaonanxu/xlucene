@@ -184,9 +184,9 @@ public class IndexSearcher {
    * Sugar for <code>.getIndexReader().document(docID)</code> 
    * @see IndexReader#document(int) 
    */
-  public Document doc(int docID) throws IOException {
-    return reader.document(docID);
-  }
+	public Document doc(int docID) throws IOException {
+		return reader.document(docID);
+	}
 
   /** 
    * Sugar for <code>.getIndexReader().document(docID, fieldVisitor)</code>
@@ -512,11 +512,11 @@ public class IndexSearcher {
 
 		if (sort == null) throw new NullPointerException("Sort must not be null");
     
-    int limit = reader.maxDoc();
-    if (limit == 0) {
-      limit = 1;
-    }
-    nDocs = Math.min(nDocs, limit);
+		int limit = reader.maxDoc();
+		if (limit == 0) {
+			limit = 1;
+		}
+		nDocs = Math.min(nDocs, limit);
 
 		if (executor == null) {
       // use all leaves here!

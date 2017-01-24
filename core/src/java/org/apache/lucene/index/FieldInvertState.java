@@ -42,11 +42,11 @@ public final class FieldInvertState {
   // we must track these across field instances (multi-valued case)
   int lastStartOffset = 0;
   int lastPosition = 0;
-  AttributeSource attributeSource;
+  	AttributeSource attributeSource;
 
-  OffsetAttribute offsetAttribute;
+  	OffsetAttribute offsetAttribute;
 	PositionIncrementAttribute posIncrAttribute;
-  PayloadAttribute payloadAttribute;
+	PayloadAttribute payloadAttribute;
 	TermToBytesRefAttribute termAttribute;
 
   /** Creates {code FieldInvertState} for the specified

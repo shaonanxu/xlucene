@@ -87,7 +87,7 @@ public abstract class TopFieldCollector extends TopDocsCollector<Entry> {
 			}
 		}
     
-    @Override
+		@Override
     	public void setNextReader(AtomicReaderContext context) throws IOException {
     		this.docBase = context.docBase;
     		queue.setComparator(0, comparator.setNextReader(context));
@@ -374,11 +374,11 @@ public abstract class TopFieldCollector extends TopDocsCollector<Entry> {
 			reverseMul = queue.getReverseMul();
 		}
     
-    final void updateBottom(int doc) {
-      // bottom.score is already set to Float.NaN in add().
-      bottom.doc = docBase + doc;
-      bottom = pq.updateTop();
-    }
+		final void updateBottom(int doc) {
+			// bottom.score is already set to Float.NaN in add().
+			bottom.doc = docBase + doc;
+			bottom = pq.updateTop();
+		}
 
 		@Override
 		public void collect(int doc) throws IOException {
@@ -449,8 +449,7 @@ public abstract class TopFieldCollector extends TopDocsCollector<Entry> {
    * tracking document scores and maxScore, and assumes out of orderness in doc
    * Ids collection.
    */
-  private static class OutOfOrderMultiComparatorNonScoringCollector extends
-      MultiComparatorNonScoringCollector {
+	private static class OutOfOrderMultiComparatorNonScoringCollector extends MultiComparatorNonScoringCollector {
     
     public OutOfOrderMultiComparatorNonScoringCollector(FieldValueHitQueue<Entry> queue,
         int numHits, boolean fillFields) {
@@ -541,49 +540,53 @@ public abstract class TopFieldCollector extends TopDocsCollector<Entry> {
         maxScore = score;
       }
       ++totalHits;
-      if (queueFull) {
-        // Fastmatch: return if this hit is not competitive
-        for (int i = 0;; i++) {
-          final int c = reverseMul[i] * comparators[i].compareBottom(doc);
-          if (c < 0) {
-            // Definitely not competitive.
-            return;
-          } else if (c > 0) {
-            // Definitely competitive.
-            break;
-          } else if (i == comparators.length - 1) {
-            // Here c=0. If we're at the last comparator, this doc is not
-            // competitive, since docs are visited in doc Id order, which means
-            // this doc cannot compete with any other document in the queue.
-            return;
-          }
-        }
+			if (queueFull) {
+				// Fastmatch: return if this hit is not competitive
+				for (int i = 0;; i++) {
+					final int c = reverseMul[i]
+							* comparators[i].compareBottom(doc);
+					if (c < 0) {
+						// Definitely not competitive.
+						return;
+					} else if (c > 0) {
+						// Definitely competitive.
+						break;
+					} else if (i == comparators.length - 1) {
+						// Here c=0. If we're at the last comparator, this doc
+						// is not
+						// competitive, since docs are visited in doc Id order,
+						// which means
+						// this doc cannot compete with any other document in
+						// the queue.
+						return;
+					}
+				}
 
         // This hit is competitive - replace bottom element in queue & adjustTop
-        for (int i = 0; i < comparators.length; i++) {
-          comparators[i].copy(bottom.slot, doc);
-        }
+				for (int i = 0; i < comparators.length; i++) {
+					comparators[i].copy(bottom.slot, doc);
+				}
 
         updateBottom(doc, score);
 
-        for (int i = 0; i < comparators.length; i++) {
-          comparators[i].setBottom(bottom.slot);
-        }
-      } else {
-        // Startup transient: queue hasn't gathered numHits yet
-        final int slot = totalHits - 1;
-        // Copy hit into queue
-        for (int i = 0; i < comparators.length; i++) {
-          comparators[i].copy(slot, doc);
-        }
-        add(slot, doc, score);
-        if (queueFull) {
-          for (int i = 0; i < comparators.length; i++) {
-            comparators[i].setBottom(bottom.slot);
-          }
-        }
-      }
-    }
+				for (int i = 0; i < comparators.length; i++) {
+					comparators[i].setBottom(bottom.slot);
+				}
+			} else {
+				// Startup transient: queue hasn't gathered numHits yet
+				final int slot = totalHits - 1;
+				// Copy hit into queue
+				for (int i = 0; i < comparators.length; i++) {
+					comparators[i].copy(slot, doc);
+				}
+				add(slot, doc, score);
+				if (queueFull) {
+					for (int i = 0; i < comparators.length; i++) {
+						comparators[i].setBottom(bottom.slot);
+					}
+				}
+			}
+		}
 
     @Override
     public void setScorer(Scorer scorer) throws IOException {

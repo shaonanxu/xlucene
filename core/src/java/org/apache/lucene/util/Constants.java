@@ -28,10 +28,10 @@ import java.util.StringTokenizer;
 public final class Constants {
   private Constants() {}  // can't construct
 
-  /** JVM vendor info. */
+	/** JVM vendor info. */
   public static final String JVM_VENDOR = System.getProperty("java.vm.vendor");
-  public static final String JVM_VERSION = System.getProperty("java.vm.version");
-  public static final String JVM_NAME = System.getProperty("java.vm.name");
+  	public static final String JVM_VERSION = System.getProperty("java.vm.version");
+  	public static final String JVM_NAME = System.getProperty("java.vm.name");
   public static final String JVM_SPEC_VERSION = System.getProperty("java.specification.version");
 
   /** The value of <tt>System.getProperty("java.version")</tt>. **/
@@ -68,30 +68,29 @@ public final class Constants {
     } else {
       JVM_MINOR_VERSION = 0;
     }
-    boolean is64Bit = false;
+		boolean is64Bit = false;
     try {
       final Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
       final Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
       unsafeField.setAccessible(true);
       final Object unsafe = unsafeField.get(null);
-      final int addressSize = ((Number) unsafeClass.getMethod("addressSize")
-        .invoke(unsafe)).intValue();
+			final int addressSize = ((Number) unsafeClass.getMethod("addressSize").invoke(unsafe)).intValue();
       //System.out.println("Address size: " + addressSize);
-      is64Bit = addressSize >= 8;
+			is64Bit = addressSize >= 8;
     } catch (Exception e) {
       final String x = System.getProperty("sun.arch.data.model");
-      if (x != null) {
-        is64Bit = x.indexOf("64") != -1;
-      } else {
-        if (OS_ARCH != null && OS_ARCH.indexOf("64") != -1) {
-          is64Bit = true;
-        } else {
-          is64Bit = false;
-        }
-      }
+			if (x != null) {
+				is64Bit = x.indexOf("64") != -1;
+			} else {
+				if (OS_ARCH != null && OS_ARCH.indexOf("64") != -1) {
+					is64Bit = true;
+				} else {
+					is64Bit = false;
+				}
+			}
     }
-    JRE_IS_64BIT = is64Bit;
-  }
+		JRE_IS_64BIT = is64Bit;
+	}
 
   public static final boolean JRE_IS_MINIMUM_JAVA8 = JVM_MAJOR_VERSION > 1 || (JVM_MAJOR_VERSION == 1 && JVM_MINOR_VERSION >= 8);
   public static final boolean JRE_IS_MINIMUM_JAVA9 = JVM_MAJOR_VERSION > 1 || (JVM_MAJOR_VERSION == 1 && JVM_MINOR_VERSION >= 9);

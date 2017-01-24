@@ -42,7 +42,7 @@ public final class FieldInfo {
 
   private DocValuesType normType;
   private boolean omitNorms; // omit norms associated with indexed fields  
-  private IndexOptions indexOptions;
+	private IndexOptions indexOptions;
   private boolean storePayloads; // whether this field stores payloads together with term positions
 
   private Map<String,String> attributes;
@@ -53,7 +53,7 @@ public final class FieldInfo {
    * Controls how much information is stored in the postings lists.
    * @lucene.experimental
    */
-  public static enum IndexOptions { 
+	public static enum IndexOptions { 
     // NOTE: order is important here; FieldInfo uses this
     // order to merge two conflicting IndexOptions (always
     // "downgrades" by picking the lowest).
@@ -63,24 +63,24 @@ public final class FieldInfo {
      * will behave as if any term in the document appears only once.
      */
     // TODO: maybe rename to just DOCS?
-    DOCS_ONLY,
+		DOCS_ONLY,
     /** 
      * Only documents and term frequencies are indexed: positions are omitted. 
      * This enables normal scoring, except Phrase and other positional queries
      * will throw an exception.
      */  
-    DOCS_AND_FREQS,
+		DOCS_AND_FREQS,
     /** 
      * Indexes documents, frequencies and positions.
      * This is a typical default for full-text search: full scoring is enabled
      * and positional queries are supported.
      */
-    DOCS_AND_FREQS_AND_POSITIONS,
+		DOCS_AND_FREQS_AND_POSITIONS,
     /** 
      * Indexes documents, frequencies, positions and offsets.
      * Character offsets are encoded alongside the positions. 
      */
-    DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS,
+		DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS,
   }
   
   /**

@@ -117,22 +117,22 @@ final class DocumentsWriter implements Closeable, Accountable {
    */
   private volatile boolean pendingChangesInCurrentFullFlush;
 
-  final DocumentsWriterPerThreadPool perThreadPool;
+	final DocumentsWriterPerThreadPool perThreadPool;
   final FlushPolicy flushPolicy;
-  final DocumentsWriterFlushControl flushControl;
+	final DocumentsWriterFlushControl flushControl;
   private final IndexWriter writer;
-  private final Queue<Event> events;
+	private final Queue<Event> events;
 
   
 	DocumentsWriter(IndexWriter writer, LiveIndexWriterConfig config, Directory directory) {
-    this.directory = directory;
+		this.directory = directory;
     this.config = config;
     this.infoStream = config.getInfoStream();
 		this.perThreadPool = config.getIndexerThreadPool();
     flushPolicy = config.getFlushPolicy();
     this.writer = writer;
-    this.events = new ConcurrentLinkedQueue<>();
-		flushControl = new DocumentsWriterFlushControl(this, config, writer.bufferedUpdatesStream);
+		this.events = new ConcurrentLinkedQueue<>();
+		this.flushControl = new DocumentsWriterFlushControl(this, config, writer.bufferedUpdatesStream);
 	}
   
   synchronized boolean deleteQueries(final Query... queries) throws IOException {
@@ -154,27 +154,27 @@ final class DocumentsWriter implements Closeable, Accountable {
     return applyAllDeletes( deleteQueue);
   }
 
-  synchronized boolean updateDocValues(DocValuesUpdate... updates) throws IOException {
-    final DocumentsWriterDeleteQueue deleteQueue = this.deleteQueue;
-    deleteQueue.addDocValuesUpdates(updates);
-    flushControl.doOnDelete();
-    return applyAllDeletes(deleteQueue);
-  }
+	synchronized boolean updateDocValues(DocValuesUpdate... updates) throws IOException {
+		final DocumentsWriterDeleteQueue deleteQueue = this.deleteQueue;
+		deleteQueue.addDocValuesUpdates(updates);
+		flushControl.doOnDelete();
+		return applyAllDeletes(deleteQueue);
+	}
   
   DocumentsWriterDeleteQueue currentDeleteSession() {
     return deleteQueue;
   }
   
-  private final boolean applyAllDeletes(DocumentsWriterDeleteQueue deleteQueue) throws IOException {
-    if (flushControl.getAndResetApplyAllDeletes()) {
-      if (deleteQueue != null && !flushControl.isFullFlush()) {
-        ticketQueue.addDeletes(deleteQueue);
-      }
-      putEvent(ApplyDeletesEvent.INSTANCE); // apply deletes event forces a purge
-      return true;
-    }
-    return false;
-  }
+	private final boolean applyAllDeletes(DocumentsWriterDeleteQueue deleteQueue) throws IOException {
+		if (flushControl.getAndResetApplyAllDeletes()) {
+			if (deleteQueue != null && !flushControl.isFullFlush()) {
+				ticketQueue.addDeletes(deleteQueue);
+			}
+			putEvent(ApplyDeletesEvent.INSTANCE); // apply deletes event forces a purge
+			return true;
+		}
+		return false;
+	}
   
   final int purgeBuffer(IndexWriter writer, boolean forced) throws IOException {
     if (forced) {
@@ -386,8 +386,7 @@ final class DocumentsWriter implements Closeable, Accountable {
 	private final void ensureInitialized(ThreadState state) throws IOException {
 		if (state.isActive() && state.dwpt == null) {
 			final FieldInfos.Builder infos = new FieldInfos.Builder(writer.globalFieldNumberMap);
-			state.dwpt = new DocumentsWriterPerThread(writer.newSegmentName(),
-					directory, config, infoStream, deleteQueue, infos, writer.pendingNumDocs);
+			state.dwpt = new DocumentsWriterPerThread(writer.newSegmentName(), directory, config, infoStream, deleteQueue, infos, writer.pendingNumDocs);
 		}
 	}
 
@@ -412,23 +411,22 @@ final class DocumentsWriter implements Closeable, Accountable {
         // We don't know how many documents were actually
         // counted as indexed, so we must subtract here to
         // accumulate our separate counter:
-        numDocsInRAM.addAndGet(dwpt.getNumDocsInRAM() - dwptNumDocs);
-        if (dwpt.checkAndResetHasAborted()) {
-          if (!dwpt.pendingFilesToDelete().isEmpty()) {
-            putEvent(new DeleteNewFilesEvent(dwpt.pendingFilesToDelete()));
-          }
-          subtractFlushedNumDocs(dwptNumDocs);
-          flushControl.doOnAbort(perThread);
-        }
-      }
+				numDocsInRAM.addAndGet(dwpt.getNumDocsInRAM() - dwptNumDocs);
+				if (dwpt.checkAndResetHasAborted()) {
+					if (!dwpt.pendingFilesToDelete().isEmpty()) {
+						putEvent(new DeleteNewFilesEvent(dwpt.pendingFilesToDelete()));
+					}
+					subtractFlushedNumDocs(dwptNumDocs);
+					flushControl.doOnAbort(perThread);
+				}
+			}
       final boolean isUpdate = delTerm != null;
-      flushingDWPT = flushControl.doAfterDocument(perThread, isUpdate);
-    } finally {
-      perThreadPool.release(perThread);
-    }
-
-    return postUpdate(flushingDWPT, hasEvents);
-  }
+      	flushingDWPT = flushControl.doAfterDocument(perThread, isUpdate);
+		} finally {
+			perThreadPool.release(perThread);
+		}
+		return postUpdate(flushingDWPT, hasEvents);
+	}
 
 	boolean updateDocument(final Iterable<? extends IndexableField> doc, final Analyzer analyzer, final Term delTerm) throws IOException {
 		boolean hasEvents = preUpdate();
@@ -441,7 +439,7 @@ final class DocumentsWriter implements Closeable, Accountable {
       }
       ensureInitialized(perThread);
       assert perThread.isInitialized();
-      final DocumentsWriterPerThread dwpt = perThread.dwpt;
+			final DocumentsWriterPerThread dwpt = perThread.dwpt;
       final int dwptNumDocs = dwpt.getNumDocsInRAM();
 			try {
 				dwpt.updateDocument(doc, analyzer, delTerm);
@@ -654,9 +652,9 @@ final class DocumentsWriter implements Closeable, Accountable {
     return config;
   }
   
-  private void putEvent(Event event) {
-    events.add(event);
-  }
+	private void putEvent(Event event) {
+		events.add(event);
+	}
 
   @Override
   public long ramBytesUsed() {
@@ -731,7 +729,7 @@ final class DocumentsWriter implements Closeable, Accountable {
     }
   }
 
-  public Queue<Event> eventQueue() {
-    return events;
-  }
+	public Queue<Event> eventQueue() {
+		return events;
+	}
 }

@@ -53,14 +53,13 @@ public class CompressingStoredFieldsFormat extends StoredFieldsFormat {
   private final int chunkSize;
 
   /**
-   * Create a new {@link CompressingStoredFieldsFormat} with an empty segment 
-   * suffix.
+   * Create a new {@link CompressingStoredFieldsFormat} with an empty segment suffix.
    * 
    * @see CompressingStoredFieldsFormat#CompressingStoredFieldsFormat(String, String, CompressionMode, int)
    */
-  public CompressingStoredFieldsFormat(String formatName, CompressionMode compressionMode, int chunkSize) {
-    this(formatName, "", compressionMode, chunkSize);
-  }
+	public CompressingStoredFieldsFormat(String formatName, CompressionMode compressionMode, int chunkSize) {
+		this(formatName, "", compressionMode, chunkSize);
+	}
   
   /**
    * Create a new {@link CompressingStoredFieldsFormat}.
@@ -95,16 +94,14 @@ public class CompressingStoredFieldsFormat extends StoredFieldsFormat {
    * @param chunkSize the minimum number of bytes of a single chunk of stored documents
    * @see CompressionMode
    */
-  public CompressingStoredFieldsFormat(String formatName, String segmentSuffix, 
-                                       CompressionMode compressionMode, int chunkSize) {
+	public CompressingStoredFieldsFormat(String formatName, String segmentSuffix, CompressionMode compressionMode, int chunkSize) {
     this.formatName = formatName;
     this.segmentSuffix = segmentSuffix;
-    this.compressionMode = compressionMode;
+		this.compressionMode = compressionMode;
     if (chunkSize < 1) {
       throw new IllegalArgumentException("chunkSize must be >= 1");
     }
     this.chunkSize = chunkSize;
-    
   }
 
   @Override

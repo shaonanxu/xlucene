@@ -33,23 +33,23 @@ abstract class TermsHashPerField implements Comparable<TermsHashPerField> {
 
   final TermsHash termsHash;
 
-  final TermsHashPerField nextPerField;
+	final TermsHashPerField nextPerField;
   protected final DocumentsWriterPerThread.DocState docState;
   protected final FieldInvertState fieldState;
 	TermToBytesRefAttribute termAtt;
-  BytesRef termBytesRef;
+	BytesRef termBytesRef;
 
   // Copied from our perThread
-  final IntBlockPool intPool;
-  final ByteBlockPool bytePool;
-  final ByteBlockPool termBytePool;
+	final IntBlockPool intPool;
+	final ByteBlockPool bytePool;
+	final ByteBlockPool termBytePool;
 
-  final int streamCount;
-  final int numPostingInt;
+	final int streamCount;
+	final int numPostingInt;
 
   protected final FieldInfo fieldInfo;
 
-  final BytesRefHash bytesHash;
+	final BytesRefHash bytesHash;
 
   ParallelPostingsArray postingsArray;
   private final Counter bytesUsed;
@@ -58,19 +58,19 @@ abstract class TermsHashPerField implements Comparable<TermsHashPerField> {
    * E.g. doc(+freq) is 1 stream, prox+offset is a second. */
 
   public TermsHashPerField(int streamCount, FieldInvertState fieldState, TermsHash termsHash, TermsHashPerField nextPerField, FieldInfo fieldInfo) {
-    intPool = termsHash.intPool;
-    bytePool = termsHash.bytePool;
-    termBytePool = termsHash.termBytePool;
+		intPool = termsHash.intPool;
+		bytePool = termsHash.bytePool;
+		termBytePool = termsHash.termBytePool;
     docState = termsHash.docState;
     this.termsHash = termsHash;
     bytesUsed = termsHash.bytesUsed;
     this.fieldState = fieldState;
-    this.streamCount = streamCount;
-    numPostingInt = 2*streamCount;
+		this.streamCount = streamCount;
+		numPostingInt = 2*streamCount;
     this.fieldInfo = fieldInfo;
     this.nextPerField = nextPerField;
-    PostingsBytesStartArray byteStarts = new PostingsBytesStartArray(this, bytesUsed);
-    bytesHash = new BytesRefHash(termBytePool, HASH_INIT_SIZE, byteStarts);
+		PostingsBytesStartArray byteStarts = new PostingsBytesStartArray(this, bytesUsed);
+		bytesHash = new BytesRefHash(termBytePool, HASH_INIT_SIZE, byteStarts);
   }
 
   public void reset() {
@@ -145,53 +145,52 @@ abstract class TermsHashPerField implements Comparable<TermsHashPerField> {
 
 		termAtt.fillBytesRef();
 
-    // We are first in the chain so we must "intern" the
-    // term text into textStart address
+    // We are first in the chain so we must "intern" the term text into textStart address
     // Get the text & hash of this term.
-    int termID = bytesHash.add(termBytesRef);
+		int termID = bytesHash.add(termBytesRef);
       
     //System.out.println("add term=" + termBytesRef.utf8ToString() + " doc=" + docState.docID + " termID=" + termID);
 
-    if (termID >= 0) {// New posting
-      bytesHash.byteStart(termID);
+		if (termID >= 0) {// New posting
+			bytesHash.byteStart(termID);
       // Init stream slices
-      if (numPostingInt + intPool.intUpto > IntBlockPool.INT_BLOCK_SIZE) {
-        intPool.nextBuffer();
-      }
+			if (numPostingInt + intPool.intUpto > IntBlockPool.INT_BLOCK_SIZE) {
+				intPool.nextBuffer();
+			}
 
       if (ByteBlockPool.BYTE_BLOCK_SIZE - bytePool.byteUpto < numPostingInt*ByteBlockPool.FIRST_LEVEL_SIZE) {
         bytePool.nextBuffer();
       }
 
-      intUptos = intPool.buffer;
-      intUptoStart = intPool.intUpto;
-      intPool.intUpto += streamCount;
+			intUptos = intPool.buffer;
+			intUptoStart = intPool.intUpto;
+			intPool.intUpto += streamCount;
 
       postingsArray.intStarts[termID] = intUptoStart + intPool.intOffset;
 
-      for(int i=0;i<streamCount;i++) {
-        final int upto = bytePool.newSlice(ByteBlockPool.FIRST_LEVEL_SIZE);
-        intUptos[intUptoStart+i] = upto + bytePool.byteOffset;
-      }
-      postingsArray.byteStarts[termID] = intUptos[intUptoStart];
+			for (int i = 0; i < streamCount; i++) {
+				final int upto = bytePool.newSlice(ByteBlockPool.FIRST_LEVEL_SIZE);
+				intUptos[intUptoStart+i] = upto + bytePool.byteOffset;
+			}
+			postingsArray.byteStarts[termID] = intUptos[intUptoStart];
 
-      newTerm(termID);
+			newTerm(termID);
 
-    } else {
-      termID = (-termID)-1;
-      int intStart = postingsArray.intStarts[termID];
-      intUptos = intPool.buffers[intStart >> IntBlockPool.INT_BLOCK_SHIFT];
-      intUptoStart = intStart & IntBlockPool.INT_BLOCK_MASK;
-      addTerm(termID);
-    }
+		} else {
+			termID = (-termID) - 1;
+			int intStart = postingsArray.intStarts[termID];
+			intUptos = intPool.buffers[intStart >> IntBlockPool.INT_BLOCK_SHIFT];
+			intUptoStart = intStart & IntBlockPool.INT_BLOCK_MASK;
+			addTerm(termID);
+		}
 
     if (doNextCall) {
       nextPerField.add(postingsArray.textStarts[termID]);
     }
   }
 
-  int[] intUptos;
-  int intUptoStart;
+	int[] intUptos;
+	int intUptoStart;
 
   void writeByte(int stream, byte b) {
     int upto = intUptos[intUptoStart+stream];
@@ -224,22 +223,21 @@ abstract class TermsHashPerField implements Comparable<TermsHashPerField> {
     writeByte(stream, (byte) i);
   }
 
-  private static final class PostingsBytesStartArray extends BytesStartArray {
+	private static final class PostingsBytesStartArray extends BytesStartArray {
 
-    private final TermsHashPerField perField;
+		private final TermsHashPerField perField;
     private final Counter bytesUsed;
 
-    private PostingsBytesStartArray(
-        TermsHashPerField perField, Counter bytesUsed) {
-      this.perField = perField;
-      this.bytesUsed = bytesUsed;
-    }
+		private PostingsBytesStartArray(TermsHashPerField perField, Counter bytesUsed) {
+			this.perField = perField;
+			this.bytesUsed = bytesUsed;
+		}
 
     @Override
     public int[] init() {
       if (perField.postingsArray == null) {
         perField.postingsArray = perField.createPostingsArray(2);
-        perField.newPostingsArray();
+				perField.newPostingsArray();
         bytesUsed.addAndGet(perField.postingsArray.size * perField.postingsArray.bytesPerPosting());
       }
       return perField.postingsArray.textStarts;
@@ -303,7 +301,7 @@ abstract class TermsHashPerField implements Comparable<TermsHashPerField> {
   abstract void newTerm(int termID) throws IOException;
 
   /** Called when a previously seen term is seen again. */
-  abstract void addTerm(int termID) throws IOException;
+	abstract void addTerm(int termID) throws IOException;
 
   /** Called when the postings array is initialized or
    *  resized. */

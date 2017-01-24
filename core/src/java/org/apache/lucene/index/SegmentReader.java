@@ -114,17 +114,17 @@ public final class SegmentReader extends AtomicReader implements Accountable {
       if (si.hasDeletions()) {
         // NOTE: the bitvector is stored using the regular directory, not cfs
 				liveDocs = codec.liveDocsFormat().readLiveDocs(directory(), si, IOContext.READONCE);
-      } else {
+			} else {
         assert si.getDelCount() == 0;
-        liveDocs = null;
-      }
-      numDocs = si.info.getDocCount() - si.getDelCount();
+        		liveDocs = null;
+			}
+			numDocs = si.info.getDocCount() - si.getDelCount();
 
-      if (fieldInfos.hasDocValues()) {
-        initDocValuesProducers(codec);
-      }
+			if (fieldInfos.hasDocValues()) {
+				initDocValuesProducers(codec);
+			}
 
-      success = true;
+			success = true;
     } finally {
       // With lock-less commits, it's entirely possible (and
       // fine) to hit a FileNotFound exception above.  In

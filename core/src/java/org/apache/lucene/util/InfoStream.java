@@ -33,21 +33,21 @@ import java.io.Closeable;
 public abstract class InfoStream implements Closeable {
 
   /** Instance of InfoStream that does no logging at all. */
-  public static final InfoStream NO_OUTPUT = new NoOutput();
-  private static final class NoOutput extends InfoStream {
-    @Override
-    public void message(String component, String message) {
-      assert false: "message() should not be called when isEnabled returns false";
-    }
-    
-    @Override
-    public boolean isEnabled(String component) {
-      return false;
-    }
+	public static final InfoStream NO_OUTPUT = new NoOutput();
+	private static final class NoOutput extends InfoStream {
+		@Override
+		public void message(String component, String message) {
+			assert false : "message() should not be called when isEnabled returns false";
+		}
 
-    @Override
-    public void close() {}
-  }
+		@Override
+		public boolean isEnabled(String component) {
+			return false;
+		}
+
+		@Override
+		public void close() {}
+	}
   
   /** prints a message */
   public abstract void message(String component, String message);
@@ -59,9 +59,9 @@ public abstract class InfoStream implements Closeable {
   
   /** The default {@code InfoStream} used by a newly instantiated classes.
    * @see #setDefault */
-  public static synchronized InfoStream getDefault() {
-    return defaultInfoStream;
-  }
+	public static synchronized InfoStream getDefault() {
+		return defaultInfoStream;
+	}
   
   /** Sets the default {@code InfoStream} used
    * by a newly instantiated classes. It cannot be {@code null},

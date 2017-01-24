@@ -68,19 +68,19 @@ final class DocumentsWriterFlushControl implements Accountable {
 	private final DocumentsWriterPerThreadPool perThreadPool;
   private final FlushPolicy flushPolicy;
   private boolean closed = false;
-  private final DocumentsWriter documentsWriter;
+	private final DocumentsWriter documentsWriter;
   private final LiveIndexWriterConfig config;
   private final BufferedUpdatesStream bufferedUpdatesStream;
   private final InfoStream infoStream;
 
-  DocumentsWriterFlushControl(DocumentsWriter documentsWriter, LiveIndexWriterConfig config, BufferedUpdatesStream bufferedUpdatesStream) {
+	DocumentsWriterFlushControl(DocumentsWriter documentsWriter, LiveIndexWriterConfig config, BufferedUpdatesStream bufferedUpdatesStream) {
     this.infoStream = config.getInfoStream();
     this.stallControl = new DocumentsWriterStallControl();
-    this.perThreadPool = documentsWriter.perThreadPool;
+		this.perThreadPool = documentsWriter.perThreadPool;
     this.flushPolicy = documentsWriter.flushPolicy;
     this.config = config;
     this.hardMaxBytesPerDWPT = config.getRAMPerThreadHardLimitMB() * 1024 * 1024;
-    this.documentsWriter = documentsWriter;
+		this.documentsWriter = documentsWriter;
     this.bufferedUpdatesStream = bufferedUpdatesStream;
   }
 

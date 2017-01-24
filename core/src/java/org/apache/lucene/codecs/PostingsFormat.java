@@ -60,10 +60,10 @@ public abstract class PostingsFormat implements NamedSPILoader.NamedSPI {
    * SPI mechanism (registered in META-INF/ of your jar file, etc).
    * @param name must be all ascii alphanumeric, and less than 128 characters in length.
    */
-  protected PostingsFormat(String name) {
-    NamedSPILoader.checkServiceName(name);
-    this.name = name;
-  }
+	protected PostingsFormat(String name) {
+		NamedSPILoader.checkServiceName(name);
+		this.name = name;
+	}
 
   /** Returns this posting format's name */
   @Override
@@ -72,7 +72,7 @@ public abstract class PostingsFormat implements NamedSPILoader.NamedSPI {
   }
   
   /** Writes a new segment */
-  public abstract FieldsConsumer fieldsConsumer(SegmentWriteState state) throws IOException;
+	public abstract FieldsConsumer fieldsConsumer(SegmentWriteState state) throws IOException;
 
   /** Reads a segment.  NOTE: by the time this call
    *  returns, it must hold open any files it will need to

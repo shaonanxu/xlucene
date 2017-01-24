@@ -85,18 +85,18 @@ public class Lucene40LiveDocsFormat extends LiveDocsFormat {
     return liveDocs.clone();
   }
 
-  @Override
-  public Bits readLiveDocs(Directory dir, SegmentCommitInfo info, IOContext context) throws IOException {
-    String filename = IndexFileNames.fileNameFromGeneration(info.info.name, DELETES_EXTENSION, info.getDelGen());
-    final BitVector liveDocs = new BitVector(dir, filename, context);
-    if (liveDocs.length() != info.info.getDocCount()) {
-      throw new CorruptIndexException("liveDocs.length()=" + liveDocs.length() + "info.docCount=" + info.info.getDocCount() + " (filename=" + filename + ")");
-    }
-    if (liveDocs.count() != info.info.getDocCount() - info.getDelCount()) {
-      throw new CorruptIndexException("liveDocs.count()=" + liveDocs.count() + " info.docCount=" + info.info.getDocCount() + " info.getDelCount()=" + info.getDelCount() + " (filename=" + filename + ")");
-    }
-    return liveDocs;
-  }
+	@Override
+	public Bits readLiveDocs(Directory dir, SegmentCommitInfo info, IOContext context) throws IOException {
+		String filename = IndexFileNames.fileNameFromGeneration(info.info.name, DELETES_EXTENSION, info.getDelGen());
+		final BitVector liveDocs = new BitVector(dir, filename, context);
+		if (liveDocs.length() != info.info.getDocCount()) {
+			throw new CorruptIndexException("liveDocs.length()=" + liveDocs.length() + "info.docCount=" + info.info.getDocCount() + " (filename=" + filename + ")");
+		}
+		if (liveDocs.count() != info.info.getDocCount() - info.getDelCount()) {
+			throw new CorruptIndexException("liveDocs.count()=" + liveDocs.count() + " info.docCount=" + info.info.getDocCount() + " info.getDelCount()=" + info.getDelCount() + " (filename=" + filename + ")");
+		}
+		return liveDocs;
+	}
 
   @Override
   public void writeLiveDocs(MutableBits bits, Directory dir, SegmentCommitInfo info, int newDelCount, IOContext context) throws IOException {

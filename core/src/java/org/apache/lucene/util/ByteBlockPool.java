@@ -210,14 +210,14 @@ public final class ByteBlockPool {
    * Allocates a new slice with the given size. 
    * @see ByteBlockPool#FIRST_LEVEL_SIZE
    */
-  public int newSlice(final int size) {
-    if (byteUpto > BYTE_BLOCK_SIZE-size)
-      nextBuffer();
-    final int upto = byteUpto;
-    byteUpto += size;
-    buffer[byteUpto-1] = 16;
-    return upto;
-  }
+	public int newSlice(final int size) {
+		if (byteUpto > BYTE_BLOCK_SIZE - size)
+			nextBuffer();
+		final int upto = byteUpto;
+		byteUpto += size;
+		buffer[byteUpto - 1] = 16;
+		return upto;
+	}
 
   // Size of each slice.  These arrays should be at most 16
   // elements (index is encoded with 4 bits).  First array
@@ -229,18 +229,18 @@ public final class ByteBlockPool {
    * An array holding the offset into the {@link ByteBlockPool#LEVEL_SIZE_ARRAY}
    * to quickly navigate to the next slice level.
    */
-  public final static int[] NEXT_LEVEL_ARRAY = {1, 2, 3, 4, 5, 6, 7, 8, 9, 9};
+	public final static int[] NEXT_LEVEL_ARRAY = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 9 };
   
   /**
    * An array holding the level sizes for byte slices.
    */
-  public final static int[] LEVEL_SIZE_ARRAY = {5, 14, 20, 30, 40, 40, 80, 80, 120, 200};
+	public final static int[] LEVEL_SIZE_ARRAY = { 5, 14, 20, 30, 40, 40, 80, 80, 120, 200 };
   
   /**
    * The first level size for new slices
    * @see ByteBlockPool#newSlice(int)
    */
-  public final static int FIRST_LEVEL_SIZE = LEVEL_SIZE_ARRAY[0];
+	public final static int FIRST_LEVEL_SIZE = LEVEL_SIZE_ARRAY[0];
 
   /**
    * Creates a new byte slice with the given starting size and 

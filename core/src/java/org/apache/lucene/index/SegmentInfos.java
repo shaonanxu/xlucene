@@ -441,18 +441,18 @@ public final class SegmentInfos implements Cloneable, Iterable<SegmentCommitInfo
 
   /** Find the latest commit ({@code segments_N file}) and
    *  load all {@link SegmentCommitInfo}s. */
-  public final void read(Directory directory) throws IOException {
-    generation = lastGeneration = -1;
+	public final void read(Directory directory) throws IOException {
+		generation = lastGeneration = -1;
 
-    new FindSegmentsFile(directory) {
+		new FindSegmentsFile(directory) {
 
-      @Override
-      protected Object doBody(String segmentFileName) throws IOException {
-        read(directory, segmentFileName);
-        return null;
-      }
-    }.run();
-  }
+			@Override
+			protected Object doBody(String segmentFileName) throws IOException {
+				read(directory, segmentFileName);
+				return null;
+			}
+		}.run();
+	}
 
   // Only non-null after prepareCommit has been called and
   // before finishCommit is called
@@ -1154,11 +1154,10 @@ public final class SegmentInfos implements Cloneable, Iterable<SegmentCommitInfo
     return count;
   }
 
-  /** Call this before committing if changes have been made to the
-   *  segments. */
-  public void changed() {
-    version++;
-  }
+  /** Call this before committing if changes have been made to the segments. */
+	public void changed() {
+		version++;
+	}
   
   /** applies all changes caused by committing a merge to this SegmentInfos */
   void applyMergeChanges(MergePolicy.OneMerge merge, boolean dropSegment) {

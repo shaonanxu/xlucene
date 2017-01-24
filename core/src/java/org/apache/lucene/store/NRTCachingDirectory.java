@@ -77,13 +77,12 @@ public class NRTCachingDirectory extends FilterDirectory implements Accountable 
   /**
    *  We will cache a newly created output if 1) it's a
    *  flush or a merge and the estimated size of the merged segment is <=
-   *  maxMergeSizeMB, and 2) the total cached bytes is <=
-   *  maxCachedMB */
-  public NRTCachingDirectory(Directory delegate, double maxMergeSizeMB, double maxCachedMB) {
-    super(delegate);
-    maxMergeSizeBytes = (long) (maxMergeSizeMB*1024*1024);
-    maxCachedBytes = (long) (maxCachedMB*1024*1024);
-  }
+   *  maxMergeSizeMB, and 2) the total cached bytes is <= maxCachedMB */
+	public NRTCachingDirectory(Directory delegate, double maxMergeSizeMB, double maxCachedMB) {
+		super(delegate);
+		maxMergeSizeBytes = (long) (maxMergeSizeMB * 1024 * 1024);
+		maxCachedBytes = (long) (maxCachedMB * 1024 * 1024);
+	}
 
 
   @Override

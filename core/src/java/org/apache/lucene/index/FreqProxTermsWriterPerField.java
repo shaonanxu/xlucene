@@ -131,14 +131,14 @@ final class FreqProxTermsWriterPerField extends TermsHashPerField {
   }
 
   @Override
-  void addTerm(final int termID) {
-    final FreqProxPostingsArray postings = freqProxPostingsArray;
+	void addTerm(final int termID) {
+		final FreqProxPostingsArray postings = freqProxPostingsArray;
 
     assert !hasFreq || postings.termFreqs[termID] > 0;
 
-    if (!hasFreq) {
+		if (!hasFreq) {
       assert postings.termFreqs == null;
-      if (docState.docID != postings.lastDocIDs[termID]) {
+			if (docState.docID != postings.lastDocIDs[termID]) {
         // New document; now encode docCode for previous doc:
         assert docState.docID > postings.lastDocIDs[termID];
         writeVInt(0, postings.lastDocCodes[termID]);
@@ -201,22 +201,22 @@ final class FreqProxTermsWriterPerField extends TermsHashPerField {
     return new FreqProxPostingsArray(size, hasFreq, hasProx, hasOffsets);
   }
 
-  static final class FreqProxPostingsArray extends ParallelPostingsArray {
-    public FreqProxPostingsArray(int size, boolean writeFreqs, boolean writeProx, boolean writeOffsets) {
-      super(size);
-      if (writeFreqs) {
-        termFreqs = new int[size];
-      }
-      lastDocIDs = new int[size];
-      lastDocCodes = new int[size];
-      if (writeProx) {
-        lastPositions = new int[size];
-        if (writeOffsets) {
-          lastOffsets = new int[size];
-        }
-      } else {
-        assert !writeOffsets;
-      }
+	static final class FreqProxPostingsArray extends ParallelPostingsArray {
+		public FreqProxPostingsArray(int size, boolean writeFreqs, boolean writeProx, boolean writeOffsets) {
+			super(size);
+			if (writeFreqs) {
+				termFreqs = new int[size];
+			}
+			lastDocIDs = new int[size];
+			lastDocCodes = new int[size];
+			if (writeProx) {
+				lastPositions = new int[size];
+				if (writeOffsets) {
+					lastOffsets = new int[size];
+				}
+			} else {
+				assert !writeOffsets;
+			}
       //System.out.println("PA init freqs=" + writeFreqs + " pos=" + writeProx + " offs=" + writeOffsets);
     }
 

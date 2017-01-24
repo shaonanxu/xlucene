@@ -53,17 +53,17 @@ public class WildcardQuery extends AutomatonQuery {
   /**
    * Constructs a query for terms matching <code>term</code>. 
    */
-  public WildcardQuery(Term term) {
-    super(term, toAutomaton(term));
-  }
+	public WildcardQuery(Term term) {
+		super(term, toAutomaton(term));
+	}
   
   /**
    * Convert Lucene wildcard syntax into an automaton.
    * @lucene.internal
    */
   @SuppressWarnings("fallthrough")
-  public static Automaton toAutomaton(Term wildcardquery) {
-    List<Automaton> automata = new ArrayList<>();
+	public static Automaton toAutomaton(Term wildcardquery) {
+		List<Automaton> automata = new ArrayList<>();
     
     String wildcardText = wildcardquery.text();
     

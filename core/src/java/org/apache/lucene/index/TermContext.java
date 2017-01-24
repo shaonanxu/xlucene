@@ -78,12 +78,11 @@ public final class TermContext {
    * <p>
    * Note: the given context must be a top-level context.
    */
-  public static TermContext build(IndexReaderContext context, Term term)
-      throws IOException {
+	public static TermContext build(IndexReaderContext context, Term term) throws IOException {
     assert context != null && context.isTopLevel;
-    final String field = term.field();
-    final BytesRef bytes = term.bytes();
-    final TermContext perReaderTermState = new TermContext(context);
+		final String field = term.field();
+		final BytesRef bytes = term.bytes();
+		final TermContext perReaderTermState = new TermContext(context);
     //if (DEBUG) System.out.println("prts.build term=" + term);
     for (final AtomicReaderContext ctx : context.leaves()) {
       //if (DEBUG) System.out.println("  r=" + leaves[i].reader);

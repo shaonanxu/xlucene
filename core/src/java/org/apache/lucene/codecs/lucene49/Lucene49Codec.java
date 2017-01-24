@@ -54,7 +54,7 @@ import org.apache.lucene.index.SegmentWriteState;
 // if they are backwards compatible or smallish we can probably do the backwards in the postingsreader
 // (it writes a minor version, etc).
 public class Lucene49Codec extends Codec {
-  private final StoredFieldsFormat fieldsFormat = new Lucene41StoredFieldsFormat();
+	private final StoredFieldsFormat fieldsFormat = new Lucene41StoredFieldsFormat();
   private final TermVectorsFormat vectorsFormat = new Lucene42TermVectorsFormat();
   private final FieldInfosFormat fieldInfosFormat = new Lucene46FieldInfosFormat();
   private final SegmentInfoFormat segmentInfosFormat = new Lucene46SegmentInfoFormat();
@@ -79,10 +79,10 @@ public class Lucene49Codec extends Codec {
     super("Lucene49");
   }
   
-  @Override
-  public final StoredFieldsFormat storedFieldsFormat() {
-    return fieldsFormat;
-  }
+	@Override
+	public final StoredFieldsFormat storedFieldsFormat() {
+		return fieldsFormat;
+	}
   
   @Override
   public final TermVectorsFormat termVectorsFormat() {

@@ -44,11 +44,11 @@ public class BinaryDocValuesField extends Field {
   /**
    * Type for straight bytes DocValues.
    */
-  public static final FieldType TYPE = new FieldType();
-  static {
-    TYPE.setDocValueType(FieldInfo.DocValuesType.BINARY);
-    TYPE.freeze();
-  }
+	public static final FieldType TYPE = new FieldType();
+	static {
+		TYPE.setDocValueType(FieldInfo.DocValuesType.BINARY);
+		TYPE.freeze();
+	}
   
   /**
    * Create a new binary DocValues field.
@@ -56,8 +56,8 @@ public class BinaryDocValuesField extends Field {
    * @param value binary content
    * @throws IllegalArgumentException if the field name is null
    */
-  public BinaryDocValuesField(String name, BytesRef value) {
-    super(name, TYPE);
-    fieldsData = value;
-  }
+	public BinaryDocValuesField(String name, BytesRef value) {
+		super(name, TYPE);
+		fieldsData = value;
+	}
 }

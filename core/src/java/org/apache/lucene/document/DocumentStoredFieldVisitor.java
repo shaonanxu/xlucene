@@ -36,7 +36,7 @@ import org.apache.lucene.index.StoredFieldVisitor;
 
 public class DocumentStoredFieldVisitor extends StoredFieldVisitor {
   private final Document doc = new Document();
-  private final Set<String> fieldsToAdd;
+	private final Set<String> fieldsToAdd;
 
   /** 
    * Load only fields named in the provided <code>Set&lt;String&gt;</code>. 
@@ -94,10 +94,10 @@ public class DocumentStoredFieldVisitor extends StoredFieldVisitor {
     doc.add(new StoredField(fieldInfo.name, value));
   }
 
-  @Override
-  public Status needsField(FieldInfo fieldInfo) throws IOException {
-    return fieldsToAdd == null || fieldsToAdd.contains(fieldInfo.name) ? Status.YES : Status.NO;
-  }
+	@Override
+	public Status needsField(FieldInfo fieldInfo) throws IOException {
+		return fieldsToAdd == null || fieldsToAdd.contains(fieldInfo.name) ? Status.YES : Status.NO;
+	}
 
   /**
    * Retrieve the visited document.

@@ -55,7 +55,7 @@ final class SegmentCoreReaders implements Accountable {
   // SegmentReaders:
   private final AtomicInteger ref = new AtomicInteger(1);
   
-  final FieldsProducer fields;
+	final FieldsProducer fields;
   final DocValuesProducer normsProducer;
 
   final int termsIndexDivisor;

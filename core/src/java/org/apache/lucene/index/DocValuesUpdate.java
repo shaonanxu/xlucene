@@ -52,12 +52,12 @@ abstract class DocValuesUpdate {
    * @param field the {@link NumericDocValuesField} to update
    * @param value the updated value
    */
-  protected DocValuesUpdate(FieldInfo.DocValuesType type, Term term, String field, Object value) {
-    this.type = type;
-    this.term = term;
-    this.field = field;
-    this.value = value;
-  }
+	protected DocValuesUpdate(FieldInfo.DocValuesType type, Term term, String field, Object value) {
+		this.type = type;
+		this.term = term;
+		this.field = field;
+		this.value = value;
+	}
 
   abstract long valueSizeInBytes();
   
@@ -76,21 +76,21 @@ abstract class DocValuesUpdate {
   }
   
   /** An in-place update to a binary DocValues field */
-  static final class BinaryDocValuesUpdate extends DocValuesUpdate {
+	static final class BinaryDocValuesUpdate extends DocValuesUpdate {
     
     /* Size of BytesRef: 2*INT + ARRAY_HEADER + PTR */
     private static final long RAW_VALUE_SIZE_IN_BYTES = NUM_BYTES_ARRAY_HEADER + 2*NUM_BYTES_INT + NUM_BYTES_OBJECT_REF;
     
-    BinaryDocValuesUpdate(Term term, String field, BytesRef value) {
-      super(FieldInfo.DocValuesType.BINARY, term, field, value);
-    }
+		BinaryDocValuesUpdate(Term term, String field, BytesRef value) {
+			super(FieldInfo.DocValuesType.BINARY, term, field, value);
+		}
 
-    @Override
-    long valueSizeInBytes() {
-      return RAW_VALUE_SIZE_IN_BYTES + ((BytesRef) value).bytes.length;
-    }
-    
-  }
+		@Override
+		long valueSizeInBytes() {
+			return RAW_VALUE_SIZE_IN_BYTES + ((BytesRef) value).bytes.length;
+		}
+
+	}
 
   /** An in-place update to a numeric DocValues field */
   static final class NumericDocValuesUpdate extends DocValuesUpdate {

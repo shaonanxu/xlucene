@@ -452,11 +452,11 @@ public abstract class IndexReader implements Closeable {
   // TODO: we need a separate StoredField, so that the
   // Document returned here contains that class not
   // IndexableField
-  public final Document document(int docID) throws IOException {
-    final DocumentStoredFieldVisitor visitor = new DocumentStoredFieldVisitor();
-    document(docID, visitor);
-    return visitor.getDocument();
-  }
+	public final Document document(int docID) throws IOException {
+		final DocumentStoredFieldVisitor visitor = new DocumentStoredFieldVisitor();
+		document(docID, visitor);
+		return visitor.getDocument();
+	}
 
   /**
    * Like {@link #document(int)} but only loads the specified

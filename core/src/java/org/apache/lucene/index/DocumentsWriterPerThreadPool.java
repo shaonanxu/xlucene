@@ -51,19 +51,19 @@ final class DocumentsWriterPerThreadPool {
    */
   @SuppressWarnings("serial")
 	final static class ThreadState extends ReentrantLock {
-    DocumentsWriterPerThread dwpt;
+		DocumentsWriterPerThread dwpt;
     // TODO this should really be part of DocumentsWriterFlushControl
     // write access guarded by DocumentsWriterFlushControl
-    volatile boolean flushPending = false;
+		volatile boolean flushPending = false;
     // TODO this should really be part of DocumentsWriterFlushControl
     // write access guarded by DocumentsWriterFlushControl
-    long bytesUsed = 0;
+		long bytesUsed = 0;
     // guarded by Reentrant lock
 		private boolean isActive = true;
 
-    ThreadState(DocumentsWriterPerThread dpwt) {
-      this.dwpt = dpwt;
-    }
+		ThreadState(DocumentsWriterPerThread dpwt) {
+			this.dwpt = dpwt;
+		}
     
     /**
      * Resets the internal {@link DocumentsWriterPerThread} with the given one. 
@@ -128,11 +128,10 @@ final class DocumentsWriterPerThreadPool {
     }
   }
 
-  private final ThreadState[] threadStates;
-  private volatile int numThreadStatesActive;
-
-  private final ThreadState[] freeList;
-  private int freeCount;
+	private final ThreadState[] threadStates;
+	private volatile int numThreadStatesActive;
+	private final ThreadState[] freeList;
+	private int freeCount;
 
   /**
    * Creates a new {@link DocumentsWriterPerThreadPool} with a given maximum of {@link ThreadState}s.
@@ -256,7 +255,7 @@ final class DocumentsWriterPerThreadPool {
           // but has now reduced, we only use a limited number of thread states:
 					threadState = freeList[freeCount-1];
 
-          if (threadState.dwpt == null) {
+					if (threadState.dwpt == null) {
             // This thread-state is not initialized, e.g. it
             // was just flushed. See if we can instead find
             // another free thread state that already has docs
@@ -265,19 +264,19 @@ final class DocumentsWriterPerThreadPool {
             // indefinitely buffered, tying up RAM.  This
             // will instead get those thread states flushed,
             // freeing up RAM for larger segment flushes:
-            for(int i=0;i<freeCount;i++) {
-              if (freeList[i].dwpt != null) {
-                // Use this one instead, and swap it with
-                // the un-initialized one:
-                ThreadState ts = freeList[i];
-                freeList[i] = threadState;
-                threadState = ts;
-                break;
-              }
-            }
-          }
-          freeCount--;
-          break;
+						for (int i = 0; i < freeCount; i++) {
+							if (freeList[i].dwpt != null) {
+								// Use this one instead, and swap it with
+								// the un-initialized one:
+								ThreadState ts = freeList[i];
+								freeList[i] = threadState;
+								threadState = ts;
+								break;
+							}
+						}
+					}
+					freeCount--;
+					break;
 				} else if (numThreadStatesActive < threadStates.length) {
           // ThreadState is already locked before return by this method:
 					return newThreadState();
@@ -293,10 +292,9 @@ final class DocumentsWriterPerThreadPool {
 		}
 
     // This could take time, e.g. if the threadState is [briefly] checked for flushing:
-    threadState.lock();
-
-    return threadState;
-  }
+		threadState.lock();
+		return threadState;
+	}
 
 	void release(ThreadState state) {
 		state.unlock();

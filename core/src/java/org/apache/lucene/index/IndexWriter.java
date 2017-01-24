@@ -258,10 +258,10 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
 
   private Collection<String> filesToCommit;
 
-  final SegmentInfos segmentInfos;       // the segments
-  final FieldNumbers globalFieldNumberMap;
+	final SegmentInfos segmentInfos; // the segments
+	final FieldNumbers globalFieldNumberMap;
 
-  private final DocumentsWriter docWriter;
+	private final DocumentsWriter docWriter;
   private final Queue<Event> eventQueue;
   final IndexFileDeleter deleter;
 
@@ -305,7 +305,7 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
 
   // The instance that was passed to the constructor. It is saved only in order
   // to allow users to query an IndexWriter settings.
-  private final LiveIndexWriterConfig config;
+	private final LiveIndexWriterConfig config;
 
   /** System.nanoTime() when commit started; used to write
    *  an infoStream message about how long commit took. */
@@ -693,11 +693,11 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
    * @throws AlreadyClosedException
    *           if this IndexWriter is closed or in the process of closing
    */
-  protected final void ensureOpen(boolean failIfClosing) throws AlreadyClosedException {
-    if (closed || (failIfClosing && closing)) {
-      throw new AlreadyClosedException("this IndexWriter is closed", tragedy);
-    }
-  }
+	protected final void ensureOpen(boolean failIfClosing) throws AlreadyClosedException {
+		if (closed || (failIfClosing && closing)) {
+			throw new AlreadyClosedException("this IndexWriter is closed", tragedy);
+		}
+	}
 
   /**
    * Used internally to throw an {@link
@@ -708,9 +708,9 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
    * Calls {@link #ensureOpen(boolean) ensureOpen(true)}.
    * @throws AlreadyClosedException if this IndexWriter is closed
    */
-  protected final void ensureOpen() throws AlreadyClosedException {
-    ensureOpen(true);
-  }
+	protected final void ensureOpen() throws AlreadyClosedException {
+		ensureOpen(true);
+	}
 
   final Codec codec; // for writing new segments
 
@@ -753,67 +753,65 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
     if (!writeLock.obtain(config.getWriteLockTimeout())) // obtain write lock
       throw new LockObtainFailedException("Index locked for write: " + writeLock);
 
-    boolean success = false;
-    try {
-      OpenMode mode = config.getOpenMode();
-      boolean create;
-      if (mode == OpenMode.CREATE) {
-        create = true;
-      } else if (mode == OpenMode.APPEND) {
-        create = false;
-      } else {
-        // CREATE_OR_APPEND - create only if an index does not exist
-        create = !DirectoryReader.indexExists(directory);
-      }
+		boolean success = false;
+		try {
+			OpenMode mode = config.getOpenMode();
+			boolean create;
+			if (mode == OpenMode.CREATE) {
+				create = true;
+			} else if (mode == OpenMode.APPEND) {
+				create = false;
+			} else {
+				// CREATE_OR_APPEND - create only if an index does not exist
+				create = !DirectoryReader.indexExists(directory);
+			}
 
-      // If index is too old, reading the segments will throw
-      // IndexFormatTooOldException.
-      segmentInfos = new SegmentInfos();
+      // If index is too old, reading the segments will throw IndexFormatTooOldException.
+			segmentInfos = new SegmentInfos();
 
       boolean initialIndexExists = true;
 
-      if (create) {
+			if (create) {
         // Try to read first.  This is to allow create
         // against an index that's currently open for
         // searching.  In this case we write the next
         // segments_N file with no segments:
-        try {
-          segmentInfos.read(directory);
-          segmentInfos.clear();
-        } catch (IOException e) {
-          // Likely this means it's a fresh directory
-          initialIndexExists = false;
-        }
+				try {
+					segmentInfos.read(directory);
+					segmentInfos.clear();
+				} catch (IOException e) {
+					// Likely this means it's a fresh directory
+					initialIndexExists = false;
+				}
 
-        // Record that we have a change (zero out all
-        // segments) pending:
-        changed();
-      } else {
-        segmentInfos.read(directory);
+        // Record that we have a change (zero out all segments) pending:
+				changed();
+			} else {
+				segmentInfos.read(directory);
 
-        IndexCommit commit = config.getIndexCommit();
-        if (commit != null) {
+				IndexCommit commit = config.getIndexCommit();
+				if (commit != null) {
           // Swap out all segments, but, keep metadata in
           // SegmentInfos, like version & generation, to
           // preserve write-once.  This is important if
           // readers are open against the future commit
           // points.
-          if (commit.getDirectory() != directory)
-            throw new IllegalArgumentException("IndexCommit's directory doesn't match my directory");
-          SegmentInfos oldInfos = new SegmentInfos();
-          oldInfos.read(directory, commit.getSegmentsFileName());
-          segmentInfos.replace(oldInfos);
-          changed();
-          if (infoStream.isEnabled("IW")) {
-            infoStream.message("IW", "init: loaded commit \"" + commit.getSegmentsFileName() + "\"");
-          }
-        }
-      }
+					if (commit.getDirectory() != directory)
+						throw new IllegalArgumentException("IndexCommit's directory doesn't match my directory");
+					SegmentInfos oldInfos = new SegmentInfos();
+					oldInfos.read(directory, commit.getSegmentsFileName());
+					segmentInfos.replace(oldInfos);
+					changed();
+					if (infoStream.isEnabled("IW")) {
+						infoStream.message("IW", "init: loaded commit \"" + commit.getSegmentsFileName() + "\"");
+					}
+				}
+			}
 
       rollbackSegments = segmentInfos.createBackupSegmentInfos();
 
       // start with previous field numbers, but new FieldInfos
-      globalFieldNumberMap = getFieldNumberMap();
+			globalFieldNumberMap = getFieldNumberMap();
       config.getFlushPolicy().init(config);
 			docWriter = new DocumentsWriter(this, config, directory);
 			eventQueue = docWriter.eventQueue();
@@ -834,10 +832,10 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
         changed();
       }
 
-      if (infoStream.isEnabled("IW")) {
-        infoStream.message("IW", "init: create=" + create);
-        messageState();
-      }
+			if (infoStream.isEnabled("IW")) {
+				infoStream.message("IW", "init: create=" + create);
+				messageState();
+			}
 
 			success = true;
 		} finally {
@@ -855,17 +853,17 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
    * Loads or returns the already loaded the global field number map for this {@link SegmentInfos}.
    * If this {@link SegmentInfos} has no global field number map the returned instance is empty
    */
-  private FieldNumbers getFieldNumberMap() throws IOException {
-    final FieldNumbers map = new FieldNumbers();
+	private FieldNumbers getFieldNumberMap() throws IOException {
+		final FieldNumbers map = new FieldNumbers();
 
-    for(SegmentCommitInfo info : segmentInfos) {
-      for(FieldInfo fi : SegmentReader.readFieldInfos(info)) {
-        map.addOrGet(fi.name, fi.number, fi.getDocValuesType());
-      }
-    }
+		for (SegmentCommitInfo info : segmentInfos) {
+			for (FieldInfo fi : SegmentReader.readFieldInfos(info)) {
+				map.addOrGet(fi.name, fi.number, fi.getDocValuesType());
+			}
+		}
 
-    return map;
-  }
+		return map;
+	}
   
   /**
    * Returns a {@link LiveIndexWriterConfig}, which can be used to query the IndexWriter
@@ -876,15 +874,13 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
     return config;
   }
 
-  private void messageState() {
-    if (infoStream.isEnabled("IW") && didMessageState == false) {
-      didMessageState = true;
-      infoStream.message("IW", "\ndir=" + directory + "\n" +
-            "index=" + segString() + "\n" +
-            "version=" + Version.LATEST.toString() + "\n" +
-            config.toString());
-    }
-  }
+	private void messageState() {
+		if (infoStream.isEnabled("IW") && didMessageState == false) {
+			didMessageState = true;
+			infoStream.message("IW", "\ndir=" + directory + "\n" + "index=" + segString() + "\n"
+				+ "version=" + Version.LATEST.toString() + "\n" + config.toString());
+		}
+	}
 
   /**
    * Gracefully closes (commits, waits for merges), but calls rollback
@@ -1225,9 +1221,9 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
    * @throws CorruptIndexException if the index is corrupt
    * @throws IOException if there is a low-level IO error
    */
-  public void addDocument(Iterable<? extends IndexableField> doc) throws IOException {
-    addDocument(doc, analyzer);
-  }
+	public void addDocument(Iterable<? extends IndexableField> doc) throws IOException {
+		addDocument(doc, analyzer);
+	}
 
   /**
    * Adds a document to this index, using the provided analyzer instead of the
@@ -1240,9 +1236,9 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
    * @throws CorruptIndexException if the index is corrupt
    * @throws IOException if there is a low-level IO error
    */
-  public void addDocument(Iterable<? extends IndexableField> doc, Analyzer analyzer) throws IOException {
-    updateDocument(null, doc, analyzer);
-  }
+	public void addDocument(Iterable<? extends IndexableField> doc, Analyzer analyzer) throws IOException {
+		updateDocument(null, doc, analyzer);
+	}
 
   /**
    * Atomically adds a block of documents with sequentially
@@ -1313,9 +1309,9 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
    *
    * @lucene.experimental
    */
-  public void updateDocuments(Term delTerm, Iterable<? extends Iterable<? extends IndexableField>> docs) throws IOException {
-    updateDocuments(delTerm, docs, analyzer);
-  }
+	public void updateDocuments(Term delTerm, Iterable<? extends Iterable<? extends IndexableField>> docs) throws IOException {
+		updateDocuments(delTerm, docs, analyzer);
+	}
 
   /**
    * Atomically deletes documents matching the provided
@@ -1331,26 +1327,26 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
    *
    * @lucene.experimental
    */
-  public void updateDocuments(Term delTerm, Iterable<? extends Iterable<? extends IndexableField>> docs, Analyzer analyzer) throws IOException {
+	public void updateDocuments(Term delTerm, Iterable<? extends Iterable<? extends IndexableField>> docs, Analyzer analyzer) throws IOException {
     ensureOpen();
-    try {
-      boolean success = false;
-      try {
-        if (docWriter.updateDocuments(docs, analyzer, delTerm)) {
-          processEvents(true, false);
-        }
-        success = true;
-      } finally {
-        if (!success) {
-          if (infoStream.isEnabled("IW")) {
-            infoStream.message("IW", "hit exception updating document");
-          }
-        }
-      }
-    } catch (OutOfMemoryError oom) {
-      tragicEvent(oom, "updateDocuments");
-    }
-  }
+		try {
+			boolean success = false;
+			try {
+				if (docWriter.updateDocuments(docs, analyzer, delTerm)) {
+					processEvents(true, false);
+				}
+				success = true;
+			} finally {
+				if (!success) {
+					if (infoStream.isEnabled("IW")) {
+						infoStream.message("IW", "hit exception updating document");
+					}
+				}
+			}
+		} catch (OutOfMemoryError oom) {
+			tragicEvent(oom, "updateDocuments");
+		}
+	}
 
   /** Expert: attempts to delete by document ID, as long as
    *  the provided reader is a near-real-time reader (from {@link
@@ -1512,8 +1508,7 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
 			} finally {
 				if (!success) {
 					if (infoStream.isEnabled("IW")) {
-						infoStream.message("IW",
-								"hit exception updating document");
+						infoStream.message("IW", "hit exception updating document");
 					}
 				}
 			}
@@ -1572,7 +1567,7 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
    * @throws IOException
    *           if there is a low-level IO error
    */
-  public void updateBinaryDocValue(Term term, String field, BytesRef value) throws IOException {
+	public void updateBinaryDocValue(Term term, String field, BytesRef value) throws IOException {
     ensureOpen();
     if (value == null) {
       throw new IllegalArgumentException("cannot update a field to a null value: " + field);
@@ -1580,13 +1575,13 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
     if (!globalFieldNumberMap.contains(field, DocValuesType.BINARY)) {
       throw new IllegalArgumentException("can only update existing binary-docvalues fields!");
     }
-    try {
-      if (docWriter.updateDocValues(new BinaryDocValuesUpdate(term, field, value))) {
-        processEvents(true, false);
-      }
-    } catch (OutOfMemoryError oom) {
-      tragicEvent(oom, "updateBinaryDocValue");
-    }
+		try {
+			if (docWriter.updateDocValues(new BinaryDocValuesUpdate(term, field, value))) {
+				processEvents(true, false);
+			}
+		} catch (OutOfMemoryError oom) {
+			tragicEvent(oom, "updateBinaryDocValue");
+		}
   }
   
   /**
@@ -2360,10 +2355,10 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
   }
 
   /** Called internally if any index state has changed. */
-  synchronized void changed() {
-    changeCount++;
-    segmentInfos.changed();
-  }
+	synchronized void changed() {
+		changeCount++;
+		segmentInfos.changed();
+	}
 
   synchronized void publishFrozenUpdates(FrozenBufferedUpdates packet) {
     assert packet != null && packet.any();
@@ -2533,9 +2528,9 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
 
             IOContext context = new IOContext(new MergeInfo(info.info.getDocCount(), info.sizeInBytes(), true, -1));
 
-            for(FieldInfo fi : SegmentReader.readFieldInfos(info)) {
-              globalFieldNumberMap.addOrGet(fi.name, fi.number, fi.getDocValuesType());
-            }
+						for (FieldInfo fi : SegmentReader.readFieldInfos(info)) {
+							globalFieldNumberMap.addOrGet(fi.name, fi.number, fi.getDocValuesType());
+						}
             infos.add(copySegmentAsIs(info, newSegName, dsNames, dsFilesCopied, context, copiedFiles));
           }
         }
@@ -4793,27 +4788,26 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
     deleter.decRef(segmentInfos);
   }
   
-  private boolean processEvents(boolean triggerMerge, boolean forcePurge) throws IOException {
-    return processEvents(eventQueue, triggerMerge, forcePurge);
-  }
+	private boolean processEvents(boolean triggerMerge, boolean forcePurge) throws IOException {
+		return processEvents(eventQueue, triggerMerge, forcePurge);
+	}
   
-  private boolean processEvents(Queue<Event> queue, boolean triggerMerge, boolean forcePurge) throws IOException {
-    Event event;
-    boolean processed = false;
-    while((event = queue.poll()) != null)  {
-      processed = true;
-      event.process(this, triggerMerge, forcePurge);
-    }
-    return processed;
-  }
+	private boolean processEvents(Queue<Event> queue, boolean triggerMerge, boolean forcePurge) throws IOException {
+		Event event;
+		boolean processed = false;
+		while ((event = queue.poll()) != null) {
+			processed = true;
+			event.process(this, triggerMerge, forcePurge);
+		}
+		return processed;
+	}
   
   /**
    * Interface for internal atomic events. See {@link DocumentsWriter} for details. Events are executed concurrently and no order is guaranteed.
    * Each event should only rely on the serializeability within it's process method. All actions that must happen before or after a certain action must be
    * encoded inside the {@link #process(IndexWriter, boolean, boolean)} method.
-   *
    */
-  static interface Event {
+	static interface Event {
     
     /**
      * Processes the event. This method is called by the {@link IndexWriter}
@@ -4828,8 +4822,8 @@ public class IndexWriter implements Closeable, TwoPhaseCommit, Accountable {
      * @throws IOException
      *           if an {@link IOException} occurs
      */
-    void process(IndexWriter writer, boolean triggerMerge, boolean clearBuffers) throws IOException;
-  }
+		void process(IndexWriter writer, boolean triggerMerge, boolean clearBuffers) throws IOException;
+	}
 
   /** Used only by asserts: returns true if the file exists
    *  (can be opened), false if it cannot be opened, and

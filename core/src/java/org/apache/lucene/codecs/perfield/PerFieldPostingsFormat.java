@@ -67,13 +67,12 @@ public abstract class PerFieldPostingsFormat extends PostingsFormat {
 
   
   /** Sole constructor. */
-  public PerFieldPostingsFormat() {
-    super(PER_FIELD_NAME);
-  }
+	public PerFieldPostingsFormat() {
+		super(PER_FIELD_NAME);
+	}
 
   @Override
-  public final FieldsConsumer fieldsConsumer(SegmentWriteState state)
-      throws IOException {
+  public final FieldsConsumer fieldsConsumer(SegmentWriteState state) throws IOException {
     return new FieldsWriter(state);
   }
   
@@ -145,8 +144,8 @@ public abstract class PerFieldPostingsFormat extends PostingsFormat {
       // .hasProx could work correctly?
       // NOTE: .hasProx is already broken in the same way for the non-perfield case,
       // if there is a fieldinfo with prox that has no postings, you get a 0 byte file.
-      return consumer.consumer.addField(field);
-    }
+			return consumer.consumer.addField(field);
+		}
 
     @Override
     public void close() throws IOException {
@@ -170,43 +169,43 @@ public abstract class PerFieldPostingsFormat extends PostingsFormat {
     }
   }
 
-  private static class FieldsReader extends FieldsProducer {
+	private static class FieldsReader extends FieldsProducer {
 
-    private static final long BASE_RAM_BYTES_USED = RamUsageEstimator.shallowSizeOfInstance(FieldsReader.class);
+		private static final long BASE_RAM_BYTES_USED = RamUsageEstimator.shallowSizeOfInstance(FieldsReader.class);
 
     private final Map<String,FieldsProducer> fields = new TreeMap<>();
     private final Map<String,FieldsProducer> formats = new HashMap<>();
 
-    public FieldsReader(final SegmentReadState readState) throws IOException {
+		public FieldsReader(final SegmentReadState readState) throws IOException {
 
       // Read _X.per and init each format:
       boolean success = false;
-      try {
+			try {
         // Read field name -> format name
-        for (FieldInfo fi : readState.fieldInfos) {
-          if (fi.isIndexed()) {
-            final String fieldName = fi.name;
-            final String formatName = fi.getAttribute(PER_FIELD_FORMAT_KEY);
-            if (formatName != null) {
+				for (FieldInfo fi : readState.fieldInfos) {
+					if (fi.isIndexed()) {
+						final String fieldName = fi.name;
+						final String formatName = fi.getAttribute(PER_FIELD_FORMAT_KEY);
+						if (formatName != null) {
               // null formatName means the field is in fieldInfos, but has no postings!
               final String suffix = fi.getAttribute(PER_FIELD_SUFFIX_KEY);
               assert suffix != null;
               PostingsFormat format = PostingsFormat.forName(formatName);
               String segmentSuffix = getSuffix(formatName, suffix);
-              if (!formats.containsKey(segmentSuffix)) {
-                formats.put(segmentSuffix, format.fieldsProducer(new SegmentReadState(readState, segmentSuffix)));
-              }
-              fields.put(fieldName, formats.get(segmentSuffix));
-            }
-          }
-        }
-        success = true;
-      } finally {
-        if (!success) {
-          IOUtils.closeWhileHandlingException(formats.values());
-        }
-      }
-    }
+							if (!formats.containsKey(segmentSuffix)) {
+								formats.put(segmentSuffix, format.fieldsProducer(new SegmentReadState(readState, segmentSuffix)));
+							}
+							fields.put(fieldName, formats.get(segmentSuffix));
+						}
+					}
+				}
+				success = true;
+			} finally {
+				if (!success) {
+					IOUtils.closeWhileHandlingException(formats.values());
+				}
+			}
+		}
 
     @Override
     public Iterator<String> iterator() {
@@ -248,11 +247,10 @@ public abstract class PerFieldPostingsFormat extends PostingsFormat {
     }
   }
 
-  @Override
-  public final FieldsProducer fieldsProducer(SegmentReadState state)
-      throws IOException {
-    return new FieldsReader(state);
-  }
+	@Override
+	public final FieldsProducer fieldsProducer(SegmentReadState state) throws IOException {
+		return new FieldsReader(state);
+	}
 
   /** 
    * Returns the postings format that should be used for writing 

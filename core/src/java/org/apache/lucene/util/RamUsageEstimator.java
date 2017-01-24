@@ -102,18 +102,18 @@ public final class RamUsageEstimator {
   /**
    * Sizes of primitive classes.
    */
-  private static final Map<Class<?>,Integer> primitiveSizes;
-  static {
-    primitiveSizes = new IdentityHashMap<>();
-    primitiveSizes.put(boolean.class, Integer.valueOf(NUM_BYTES_BOOLEAN));
-    primitiveSizes.put(byte.class, Integer.valueOf(NUM_BYTES_BYTE));
-    primitiveSizes.put(char.class, Integer.valueOf(NUM_BYTES_CHAR));
-    primitiveSizes.put(short.class, Integer.valueOf(NUM_BYTES_SHORT));
-    primitiveSizes.put(int.class, Integer.valueOf(NUM_BYTES_INT));
-    primitiveSizes.put(float.class, Integer.valueOf(NUM_BYTES_FLOAT));
-    primitiveSizes.put(double.class, Integer.valueOf(NUM_BYTES_DOUBLE));
-    primitiveSizes.put(long.class, Integer.valueOf(NUM_BYTES_LONG));
-  }
+	private static final Map<Class<?>, Integer> primitiveSizes;
+	static {
+		primitiveSizes = new IdentityHashMap<>();
+		primitiveSizes.put(boolean.class, Integer.valueOf(NUM_BYTES_BOOLEAN));
+		primitiveSizes.put(byte.class, Integer.valueOf(NUM_BYTES_BYTE));
+		primitiveSizes.put(char.class, Integer.valueOf(NUM_BYTES_CHAR));
+		primitiveSizes.put(short.class, Integer.valueOf(NUM_BYTES_SHORT));
+		primitiveSizes.put(int.class, Integer.valueOf(NUM_BYTES_INT));
+		primitiveSizes.put(float.class, Integer.valueOf(NUM_BYTES_FLOAT));
+		primitiveSizes.put(double.class, Integer.valueOf(NUM_BYTES_DOUBLE));
+		primitiveSizes.put(long.class, Integer.valueOf(NUM_BYTES_LONG));
+	}
 
   /**
    * A handle to <code>sun.misc.Unsafe</code>.

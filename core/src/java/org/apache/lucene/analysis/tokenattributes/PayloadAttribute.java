@@ -40,11 +40,11 @@ public interface PayloadAttribute extends Attribute {
    * Returns this Token's payload.
    * @see #setPayload(BytesRef)
    */ 
-  public BytesRef getPayload();
+	public BytesRef getPayload();
 
   /** 
    * Sets this Token's payload.
    * @see #getPayload()
    */
-  public void setPayload(BytesRef payload);
+	public void setPayload(BytesRef payload);
 }

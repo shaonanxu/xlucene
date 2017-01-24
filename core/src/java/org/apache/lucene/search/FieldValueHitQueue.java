@@ -197,15 +197,7 @@ public abstract class FieldValueHitQueue<T extends FieldValueHitQueue.Entry> ext
    * @return The newly created FieldDoc
    * @see IndexSearcher#search(Query,Filter,int,Sort)
    */
-  FieldDoc fillFields(final Entry entry) {
-    final int n = comparators.length;
-    final Object[] fields = new Object[n];
-    for (int i = 0; i < n; ++i) {
-      fields[i] = comparators[i].value(entry.slot);
-    }
-    //if (maxscore > 1.0f) doc.score /= maxscore;   // normalize scores
-    return new FieldDoc(entry.doc, entry.score, fields);
-  }
+
 
   /** Returns the SortFields being used by this hit queue. */
 	SortField[] getFields() {

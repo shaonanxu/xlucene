@@ -85,20 +85,20 @@ public class TestBinaryDocValuesUpdates extends LuceneTestCase {
     return bytes;
   }
   
-  private Document doc(int id) {
-    Document doc = new Document();
-    doc.add(new StringField("id", "doc-" + id, Store.NO));
-    doc.add(new BinaryDocValuesField("val", toBytes(id + 1)));
-    return doc;
-  }
+	private Document doc(int id) {
+		Document doc = new Document();
+		doc.add(new StringField("id", "doc-" + id, Store.NO));
+		doc.add(new BinaryDocValuesField("val", toBytes(id + 1)));
+		return doc;
+	}
   
-  public void testUpdatesAreFlushed() throws IOException {
-    Directory dir = newDirectory();
-    IndexWriter writer = new IndexWriter(dir, newIndexWriterConfig(new MockAnalyzer(random(), MockTokenizer.WHITESPACE, false))
-                                                .setRAMBufferSizeMB(0.00000001));
-    writer.addDocument(doc(0)); // val=1
-    writer.addDocument(doc(1)); // val=2
-    writer.addDocument(doc(3)); // val=2
+	public void testUpdatesAreFlushed() throws IOException {
+		Directory dir = newDirectory();
+		IndexWriter writer = new IndexWriter(dir, 
+				newIndexWriterConfig(new MockAnalyzer(random(), MockTokenizer.WHITESPACE, false)).setRAMBufferSizeMB(0.00000001));
+		writer.addDocument(doc(0)); // val=1
+		writer.addDocument(doc(1)); // val=2
+		writer.addDocument(doc(3)); // val=2
     writer.commit();
     assertEquals(1, writer.getFlushDeletesCount());
     writer.updateBinaryDocValue(new Term("id", "doc-0"), "val", toBytes(5));
@@ -126,7 +126,7 @@ public class TestBinaryDocValuesUpdates extends LuceneTestCase {
     if (random().nextBoolean()) { // randomly commit before the update is sent
       writer.commit();
     }
-    writer.updateBinaryDocValue(new Term("id", "doc-0"), "val", toBytes(2)); // doc=0, exp=2
+		writer.updateBinaryDocValue(new Term("id", "doc-0"), "val", toBytes(2)); // doc=0, exp=2
     
     final DirectoryReader reader;
     if (random().nextBoolean()) { // not NRT
@@ -1352,7 +1352,7 @@ public class TestBinaryDocValuesUpdates extends LuceneTestCase {
     writer.commit();
     writer.close();
     
-    NRTCachingDirectory cachingDir = new NRTCachingDirectory(dir, 100, 1/(1024.*1024.));
+		NRTCachingDirectory cachingDir = new NRTCachingDirectory(dir, 100, 1 / (1024. * 1024.));
     conf = newIndexWriterConfig(new MockAnalyzer(random()));
     // we want a single large enough segment so that a doc-values update writes a large file
     conf.setMergePolicy(NoMergePolicy.INSTANCE);
