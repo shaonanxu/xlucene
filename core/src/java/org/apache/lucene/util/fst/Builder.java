@@ -203,7 +203,7 @@ public class Builder<T> {
 		for (int idx = lastInput.length(); idx >= downTo; idx--) {
 
 			boolean doPrune = false;
-			boolean doCompile = false;
+			boolean doCompile = false;	// 是否将节点编译二进制插入到FST中
 
 			final UnCompiledNode<T> node = frontier[idx];
 			final UnCompiledNode<T> parent = frontier[idx - 1];
@@ -265,20 +265,20 @@ public class Builder<T> {
         // as non-final (the FST can represent this), but
         // FSTEnum, Util, etc., have trouble w/ non-final
         // dead-end states:
-        final boolean isFinal = node.isFinal || node.numArcs == 0;
+      				final boolean isFinal = node.isFinal || node.numArcs == 0;
 
-        if (doCompile) {
+				if (doCompile) {
           // this node makes it and we now compile it.  first,
           // compile any targets that were previously
           // undecided:
-          parent.replaceLast(lastInput.intAt(idx-1),
+					parent.replaceLast(lastInput.intAt(idx-1),
                              compileNode(node, 1+lastInput.length()-idx),
                              nextFinalOutput,
                              isFinal);
-        } else {
+				} else {
           // replaceLast just to install
           // nextFinalOutput/isFinal onto the arc
-          parent.replaceLast(lastInput.intAt(idx-1),
+					parent.replaceLast(lastInput.intAt(idx - 1),
                              node,
                              nextFinalOutput,
                              isFinal);
@@ -512,7 +512,7 @@ public class Builder<T> {
   /** Expert: holds a pending (seen but not yet serialized) Node. */
 	public static final class UnCompiledNode<T> implements Node {
 		final Builder<T> owner;
-		public int numArcs;
+		public int numArcs;	 // 节点度
 		public Arc<T>[] arcs;
     // TODO: instead of recording isFinal/output on the
     // node, maybe we should use -1 arc to mean "end" (like
@@ -520,7 +520,7 @@ public class Builder<T> {
     // code here...
     public T output;
     public boolean isFinal;
-    public long inputCount;
+    	public long inputCount;		// FST node input count  ?? why long
 
     /** This node's depth, starting from the automaton root. */
     public final int depth;
