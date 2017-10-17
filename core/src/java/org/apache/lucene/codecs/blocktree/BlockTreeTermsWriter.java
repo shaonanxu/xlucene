@@ -203,12 +203,12 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
   /** Suggested default value for the {@code
    *  minItemsInBlock} parameter to {@link
    *  #BlockTreeTermsWriter(SegmentWriteState,PostingsWriterBase,int,int)}. */
-  public final static int DEFAULT_MIN_BLOCK_SIZE = 25;
+	public final static int DEFAULT_MIN_BLOCK_SIZE = 25;	// 子节点数超过DEFAULT_MIN_BLOCK_SIZE生成一个Block
 
   /** Suggested default value for the {@code
    *  maxItemsInBlock} parameter to {@link
    *  #BlockTreeTermsWriter(SegmentWriteState,PostingsWriterBase,int,int)}. */
-  public final static int DEFAULT_MAX_BLOCK_SIZE = 48;
+  	public final static int DEFAULT_MAX_BLOCK_SIZE = 48;	// 子节点数个数超过DEFAULT_MAX_BLOCK_SIZE生成多个Block
 
   // public final static boolean DEBUG = false;
   //private final static boolean SAVE_DOT_FILES = false;
