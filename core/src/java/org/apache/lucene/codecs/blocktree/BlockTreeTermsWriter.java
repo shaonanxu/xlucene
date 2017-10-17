@@ -307,7 +307,7 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
     }
 
 		maxDoc = state.segmentInfo.getDocCount();
-
+		// block info --:tim
 		final String termsFileName = IndexFileNames.segmentFileName(state.segmentInfo.name, state.segmentSuffix, TERMS_EXTENSION);
 		out = state.directory.createOutput(termsFileName, state.context);
 		
@@ -338,6 +338,7 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
 				IOUtils.closeWhileHandlingException(out, indexOut);
 			}
 		}
+		// 每个Field都保存一个FSTIndex定位tim中属于这个Field的term位置 --:tip
 		this.indexOut = indexOut;
 	}
 
@@ -523,8 +524,8 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
   private final RAMOutputStream scratchBytes = new RAMOutputStream();
   private final IntsRefBuilder scratchIntsRef = new IntsRefBuilder();
 
-  class TermsWriter extends TermsConsumer {
-    private final FieldInfo fieldInfo;
+	class TermsWriter extends TermsConsumer {
+    		private final FieldInfo fieldInfo;
     private final int longsSize;
     private long numTerms;
     final FixedBitSet docsSeen;
@@ -556,7 +557,7 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
     private PendingTerm lastPendingTerm;
 
     /** Writes the top count entries in pending, using prevTerm to compute the prefix. */
-    void writeBlocks(int prefixLength, int count) throws IOException {
+    	void writeBlocks(int prefixLength, int count) throws IOException {
 
       assert count > 0;
 
@@ -665,7 +666,7 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
      *  were too many (more than maxItemsInBlock) entries sharing the
      *  same prefix, and so we broke it into multiple floor blocks where
      *  we record the starting label of the suffix of each floor block. */
-    private PendingBlock writeBlock(int prefixLength, boolean isFloor, int floorLeadLabel, int start, int end, boolean hasTerms, boolean hasSubBlocks) throws IOException {
+  	private PendingBlock writeBlock(int prefixLength, boolean isFloor, int floorLeadLabel, int start, int end, boolean hasTerms, boolean hasSubBlocks) throws IOException {
 
       assert end > start;
 
