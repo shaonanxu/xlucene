@@ -40,9 +40,9 @@ abstract class TermsHashPerField implements Comparable<TermsHashPerField> {
 	BytesRef termBytesRef;
 
   // Copied from our perThread
-	final IntBlockPool intPool;
-	final ByteBlockPool bytePool;
-	final ByteBlockPool termBytePool;
+	final IntBlockPool intPool;		// 用于存储分别指向每个Token在bytePool中freq和prox信息的偏移量。如果不足时，从DocumentsWriter的freeIntBlocks分配
+	final ByteBlockPool bytePool;		// 用于存储freq, prox信息，如果不足时，从DocumentsWriter中的freeByteBlocks分配
+	final ByteBlockPool termBytePool;	// 用于存储Token的文本信息
 
 	final int streamCount;
 	final int numPostingInt;
@@ -117,7 +117,7 @@ abstract class TermsHashPerField implements Comparable<TermsHashPerField> {
 
       intUptos = intPool.buffer;
       intUptoStart = intPool.intUpto;
-      intPool.intUpto += streamCount;
+      intPool.intUpto += streamCount;		// 每streamCount项表示一个词
 
       postingsArray.intStarts[termID] = intUptoStart + intPool.intOffset;
 
